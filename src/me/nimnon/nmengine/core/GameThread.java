@@ -13,25 +13,25 @@ public class GameThread extends JPanel implements Runnable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private boolean running = false;
+	public int tps = 60;
 
-	public GameThread() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
+	/**
+	 * Called when the GameThread starts.
+	 */
 	public void run() {
-		// TODO Auto-generated method stub
 		running  = true;
 		gameLoop();
 	}
 	
-	public void gameLoop()
+	/**
+	 * Method that starts the game loop.
+	 */
+	private void gameLoop()
 	{
 		long now = System.nanoTime();
 		long last = System.nanoTime();
 		long ns = 1000000000;
 		long delta = 0;
-		int tps = 60;
 		
 		while(running)
 		{
@@ -47,15 +47,18 @@ public class GameThread extends JPanel implements Runnable {
 			last = now;
 		}
 	}
-	
-	public void update()
+	/**
+	 * Called directly from the game loop, calls update on the state which in turn updates everything else.
+	 */
+	private void update()
 	{
 		Game.currentState.update();
+		tps = Game.ticksPerSecond;
 	}
 	
-	
-	float[] hsv = new float[3];
-	
+	/**
+	 * Redraws the window.
+	 */
 	public void paint(Graphics g)
 	{
 		super.paint(g);
