@@ -77,6 +77,7 @@ public class Game {
 		if(currentState != null)
 			currentState.destroy();
 		currentState = state;
+		state.create();
 	}
 
 }

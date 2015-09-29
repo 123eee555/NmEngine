@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
  * @author Nimnon
  *
  */
-public class Basic {
+public abstract class Basic {
 
 	/**
 	 * Constructor for the basic object
@@ -19,16 +19,12 @@ public class Basic {
 	/**
 	 * Called every tick, a ticks per second defined on Game instantiation.
 	 */
-	public void update() {
-		
-	}
+	public abstract void update();
 	/**
 	 * Method used by the parent state to draw the class, don't call this, it wont work, but you CAN use the g2d object to draw
 	 * Shapes n' stuff.
 	 * @param g2d Graphics object provided by the state
 	 */
-	public void draw(Graphics2D g2d) {
-		
-	}
+	public abstract void draw(Graphics2D g2d);
 
 }
