@@ -45,6 +45,6 @@ Temporary Items
 # Eclipse stuff
 .project
 .classpath
-bin
-export
+bin/
+export/
 .settings
