@@ -10,21 +10,22 @@ import me.nimnon.nmengine.state.State;
 public class MenuState extends State {
 
 	Color color;
+	GameObject box;
 	
 	public void create() {
-		color = Color.getHSBColor((float)Math.random(),0.5f,1f);
-		this.add(new GameObject());
+		box = new GameObject();
+		add(box);
 	}
 	
 	public void update() {
 		super.update();
-		color = Color.getHSBColor((float)Math.random(),0.5f,1f);
+		
+		box.x += (Game.mouse.x-box.x)/1.2;
+		box.y += (Game.mouse.y-box.y)/1.2;
 	}
 	
 	public void draw(Graphics2D g2d) {
 		super.draw(g2d);
-		//g2d.setColor(color);
-		//g2d.fillRect(0, 0, 600, 600);
 	}
 
 }

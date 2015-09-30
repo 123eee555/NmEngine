@@ -2,10 +2,12 @@ package me.nimnon.nmengine;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 
 import me.nimnon.nmengine.core.GameThread;
+import me.nimnon.nmengine.core.MousePadListener;
 import me.nimnon.nmengine.state.State;
 
 /**
@@ -18,8 +20,11 @@ public class Game {
 	
 	private JFrame window;
 	private GameThread thread;
+	private MousePadListener mouseListener;
 	
 	public static int ticksPerSecond = 60;
+	
+	public static Point mouse = new Point(0,0);
 	
 	public static State currentState;
 
@@ -34,27 +39,80 @@ public class Game {
 	 * 		Window Title
 	 * @param state
 	 * 		Game starting state, if null is treated as a new State()
+	 * @param tps
+	 * 		Ticks per second, how many times a second the update method is called.
 	 */
-	
 	public Game(int width, int height, String title, State state, int tps) {
+		createGame(width, height, title, state, tps);
+	}
+	
+	public Game(int width, int height, String title, State state) {
+		createGame(width, height, title, state, 60);
+	}
+	
+	/**
+	 * Creates game window of specified width, height and title.
+	 * @param width
+	 * @param height
+	 * @param title
+	 */
+	public Game(int width, int height, String title) {
+		createGame(width, height, title, new State(), 60);
+	}
+	
+	/**
+	 * Creates game window of specified width and height.
+	 * @param width
+	 * @param height
+	 */
+	public Game(int width, int height) {
+		createGame(width, height, "Game", new State(), 60);
+	}
+	
+	/**
+	 * Creates empty game window
+	 */
+	public Game() {
+		createGame(400, 300, "Game", new State(), 60);
+	}
+	
+	/**
+	 * Called by constructor.
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @param state
+	 * @param tps
+	 */
+	private void createGame(int width, int height, String title, State state, int tps) {
 		if (state == null)
 			state = new State();
 		ticksPerSecond = tps;
+		
+		mouseListener = new MousePadListener();
 		
 		window = new JFrame(title);
 		thread = new GameThread();
 		
 		window.setTitle(title);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setFocusable(true);
+		window.setMinimumSize(new Dimension(400, 300));
 		
 		thread.setPreferredSize(new Dimension(width, height));
 		thread.setBackground(Color.WHITE);
+		thread.setFocusable(true);
 		
 		window.add(thread);
 		
 		window.pack();
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
+		
+		thread.requestFocus();
+		
+		thread.addMouseListener(mouseListener);
+		thread.addMouseMotionListener(mouseListener);
 		
 		switchState(state);
 		

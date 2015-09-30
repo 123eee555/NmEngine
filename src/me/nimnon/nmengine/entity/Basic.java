@@ -21,7 +21,7 @@ public abstract class Basic {
 	 */
 	public abstract void update();
 	/**
-	 * Method used by the parent state to draw the class, don't call this, it wont work, but you CAN use the g2d object to draw
+	 * Method used by the parent state to draw the class, don't call this, it wont work, but you can override to draw
 	 * Shapes n' stuff.
 	 * @param g2d Graphics object provided by the state
 	 */

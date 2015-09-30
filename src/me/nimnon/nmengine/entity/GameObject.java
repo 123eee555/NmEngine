@@ -13,10 +13,10 @@ public class GameObject extends Basic {
 	public float y = 0f;
 	
 	
-	public Point2D acceleration = new Point2D(320, 320);
+	public Point2D acceleration = new Point2D(0, 0);
 	public Point2D velocity = new Point2D(0, 0);
 	public Point2D drag = new Point2D(1.2f, 1.2f);
-	public Point2D maxVelocity = new Point2D(32,32);
+	public Point2D maxVelocity = new Point2D(0,0);
 	
 	public int width = 32;
 	public int height = 32;
@@ -27,7 +27,7 @@ public class GameObject extends Basic {
 
 	@Override
 	public void update() {
-
+		
 		velocity.x += acceleration.x;
 		velocity.y += acceleration.y;
 		
