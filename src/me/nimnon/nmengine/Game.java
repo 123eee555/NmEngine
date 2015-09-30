@@ -97,10 +97,11 @@ public class Game {
 		window.setTitle(title);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setFocusable(true);
-		window.setMinimumSize(new Dimension(400, 300));
+		window.setResizable(false);
 		
 		thread.setPreferredSize(new Dimension(width, height));
-		thread.setBackground(Color.WHITE);
+		thread.setMaximumSize(new Dimension(width, height));
+		thread.setBackground(Color.BLUE);
 		thread.setFocusable(true);
 		
 		window.add(thread);
@@ -119,7 +120,7 @@ public class Game {
 		thread.tps = ticksPerSecond;
 		new Thread(thread).start();
 		
-		
+		//It synced..
 	}
 	
 	/**

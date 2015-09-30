@@ -14,8 +14,8 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		Game.mouse.x = e.getX();
+		Game.mouse.y = e.getY();
 	}
 
 	@Override

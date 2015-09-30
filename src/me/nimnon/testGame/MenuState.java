@@ -20,8 +20,8 @@ public class MenuState extends State {
 	public void update() {
 		super.update();
 		
-		box.x += (Game.mouse.x-box.x)/1.2;
-		box.y += (Game.mouse.y-box.y)/1.2;
+		box.x += (Game.mouse.x-box.x)/3;
+		box.y += (Game.mouse.y-box.y)/3;
 	}
 	
 	public void draw(Graphics2D g2d) {
