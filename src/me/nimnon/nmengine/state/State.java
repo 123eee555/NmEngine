@@ -1,9 +1,5 @@
 package me.nimnon.nmengine.state;
 
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-
-import me.nimnon.nmengine.entity.Basic;
 import me.nimnon.nmengine.entity.Group;
 
 /**

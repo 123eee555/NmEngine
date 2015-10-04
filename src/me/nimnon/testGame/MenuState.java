@@ -11,17 +11,36 @@ public class MenuState extends State {
 
 	Color color;
 	GameObject box;
+	GameObject box2;
+	GameObject box3;
+	//GameObject box4;
 	
 	public void create() {
-		box = new GameObject();
+		box = new GameObject(32, 32);
+		box2 = new GameObject(0,400);
 		add(box);
+		add(box2);
+		
+		box.drag.setLocation(1.03f,1.03f);
+		
+		box2.width=400;
+		box2.height=64;
+		
+		box3 = new GameObject(400,400-128);
+		box3.width = 64;
+		box3.height = 128+64;
+		
+		add(box3);
 	}
 	
 	public void update() {
 		super.update();
 		
-		box.x += (Game.mouse.x-box.x)/3;
-		box.y += (Game.mouse.y-box.y)/3;
+		box.acceleration.x = (Game.mouse.x-box.x-(box.width/2))/1;
+		box.acceleration.y = (Game.mouse.y-box.y-(box.height/2))/1;
+		
+		Game.collide(box, box2);
+		Game.collide(box, box3);
 	}
 	
 	public void draw(Graphics2D g2d) {

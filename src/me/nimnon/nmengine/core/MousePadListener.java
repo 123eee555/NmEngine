@@ -33,14 +33,12 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		Game.mouse.mouse1Down = true;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		Game.mouse.mouse1Down = false;
 	}
 
 	@Override

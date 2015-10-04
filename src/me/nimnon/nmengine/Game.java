@@ -7,7 +7,10 @@ import java.awt.Point;
 import javax.swing.JFrame;
 
 import me.nimnon.nmengine.core.GameThread;
+import me.nimnon.nmengine.core.KeyboardListener;
 import me.nimnon.nmengine.core.MousePadListener;
+import me.nimnon.nmengine.entity.Basic;
+import me.nimnon.nmengine.entity.GameObject;
 import me.nimnon.nmengine.state.State;
 
 /**
@@ -20,11 +23,13 @@ public class Game {
 	
 	private JFrame window;
 	private GameThread thread;
+	
+	private static KeyboardListener keyListener;
 	private MousePadListener mouseListener;
 	
 	public static int ticksPerSecond = 60;
 	
-	public static Point mouse = new Point(0,0);
+	public static Mouse mouse = new Mouse();
 	
 	public static State currentState;
 
@@ -90,6 +95,7 @@ public class Game {
 		ticksPerSecond = tps;
 		
 		mouseListener = new MousePadListener();
+		keyListener = new KeyboardListener();
 		
 		window = new JFrame(title);
 		thread = new GameThread();
@@ -97,12 +103,11 @@ public class Game {
 		window.setTitle(title);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setFocusable(true);
-		window.setResizable(false);
 		
 		thread.setPreferredSize(new Dimension(width, height));
-		thread.setMaximumSize(new Dimension(width, height));
-		thread.setBackground(Color.BLUE);
+		thread.setBackground(Color.WHITE);
 		thread.setFocusable(true);
+		thread.requestFocus();
 		
 		window.add(thread);
 		
@@ -110,17 +115,20 @@ public class Game {
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 		
-		thread.requestFocus();
-		
 		thread.addMouseListener(mouseListener);
 		thread.addMouseMotionListener(mouseListener);
+		thread.addKeyListener(keyListener);
+		
+		thread.requestFocus();
+		
+		
 		
 		switchState(state);
 		
 		thread.tps = ticksPerSecond;
 		new Thread(thread).start();
 		
-		//It synced..
+		
 	}
 	
 	/**
@@ -138,5 +146,89 @@ public class Game {
 		currentState = state;
 		state.create();
 	}
+	
+	public static boolean overlap(GameObject object1, GameObject object2)
+	{
+		if(object1.x+object1.width-1 >= object2.x && object1.x <= object2.x+object2.width) {
+			if(object1.y+object1.height-1 >= object2.y && object1.y <= object2.y+object2.height) {
+				return true;
+			}
+		}
+		return false;
+	}
 
+	/**
+	 * Collides object1 and object2, returns true if they collided successfully.
+	 * @param object1
+	 * @param object2
+	 * @return
+	 */
+	public static boolean collide(GameObject object1, GameObject object2)
+	{
+		if(overlap(object1,object2))
+		{
+			float moveX,moveY;
+			
+			float l = object2.x - ( object1.x + object1.width );
+		    float r = ( object2.x + object2.width ) - object1.x;
+		    float t = object2.y - ( object1.y + object1.height );
+		    float b = ( object2.y + object2.height ) - object1.y;
+			
+			moveX = Math.abs(l) < r ? l : r;
+			moveY = Math.abs(t) < b ? t : b;
+			
+			if(Math.abs(moveX) < Math.abs(moveY))
+			{
+				moveY = 0;
+				object1.velocity.x=0;
+				if(moveX < 0)
+					object1.touching[2] = true;
+				else
+					object1.touching[3] = true;
+			}
+			else
+			{
+				moveX = 0;
+				object1.velocity.y=0;
+				if(moveY < 0)
+					object1.touching[0] = true;
+				else
+					object1.touching[1] = true;
+			}
+			object1.x += moveX;
+			object1.y += moveY;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns true if key was just pressed.
+	 * @param charCode
+	 * @return if character was just pressed
+	 */
+	public static boolean getKeyJustPressed(int charCode)
+	{
+		if(keyListener.keysJustPressed[charCode])
+		{
+			keyListener.keysJustPressed[charCode] = false;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/**
+	 * Returns true if key is pressed down.
+	 * @param charCode
+	 * @return if character is down
+	 */
+	public static boolean getKeyPressed(int charCode)
+	{
+		if(keyListener.keys[charCode])
+			return true;
+		else
+			return false;
+	}
 }
