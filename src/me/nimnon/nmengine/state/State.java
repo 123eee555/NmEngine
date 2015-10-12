@@ -14,6 +14,9 @@ public class State extends Group{
 		
 	}
 	
+	public void update() {
+		super.update();
+	}
 	/**
 	 * Called on state creation
 	 */
@@ -21,8 +24,6 @@ public class State extends Group{
 	public void create() {
 		
 	}
-	
-	
 
 
 }

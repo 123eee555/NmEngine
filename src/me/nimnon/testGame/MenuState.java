@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import me.nimnon.nmengine.Game;
+import me.nimnon.nmengine.Mouse;
 import me.nimnon.nmengine.entity.GameObject;
 import me.nimnon.nmengine.state.State;
 
@@ -21,12 +22,13 @@ public class MenuState extends State {
 		add(box);
 		add(box2);
 		
-		box.drag.setLocation(1.03f,1.03f);
+		box.drag.setLocation(1.2f,1.2f);
+		box.color = Color.RED;
 		
 		box2.width=400;
 		box2.height=64;
 		
-		box3 = new GameObject(400,400-128);
+		box3 = new GameObject(402,400);
 		box3.width = 64;
 		box3.height = 128+64;
 		
@@ -36,11 +38,25 @@ public class MenuState extends State {
 	public void update() {
 		super.update();
 		
-		box.acceleration.x = (Game.mouse.x-box.x-(box.width/2))/1;
-		box.acceleration.y = (Game.mouse.y-box.y-(box.height/2))/1;
-		
-		Game.collide(box, box2);
 		Game.collide(box, box3);
+		Game.collide(box, box2);
+		
+		box.drag.setLocation(1.1f,1);
+		
+		box.acceleration.x = 32;
+		box.acceleration.y = 64;
+		
+		if(Game.mouse.mouse1Down)
+		{
+			box.acceleration.y = -16;
+		}
+		
+		if(box.x > 600)
+		{
+			box.x = -32;
+			box.y = 0;
+		}
+		
 	}
 	
 	public void draw(Graphics2D g2d) {

@@ -4,29 +4,55 @@ import java.awt.Graphics2D;
 
 
 /**
- * Very, VERY basic gameobject class, pretty much only exists to be extended
+ * Very, VERY basic object class, pretty much only exists to be extended
  * @author Nimnon
  *
  */
-public abstract class Basic {
+public class Basic {
 
-	public float x;
-	public float y;
+	public float x=0;
+	public float y=0;
+	
+	public int width=32;
+	public int height=32;
 	
 	/**
 	 * Constructor for the basic object
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
 	 */
+	public Basic(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+	
 	public Basic() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void create() {
 		
 	}
 	/**
 	 * Called every tick, a ticks per second defined on Game instantiation.
 	 */
-	public abstract void update();
+	public void update() {
+	}
 	/**
 	 * Called every tick after update.
 	 */
 	public void postUpdate() {
+		
+		
+	}
+	/**
+	 * Called every tick before update.
+	 */
+	public void preUpdate() {
 		
 	}
 	/**
@@ -34,6 +60,7 @@ public abstract class Basic {
 	 * Shapes n' stuff.
 	 * @param g2d Graphics object provided by the state
 	 */
-	public abstract void draw(Graphics2D g2d);
+	public void draw(Graphics2D g2d) {
+	}
 
 }

@@ -17,6 +17,7 @@ public class Group {
 	public void update() {
 		for(int i = 0; i < children.size(); i++)
 		{
+			children.get(i).preUpdate();
 			children.get(i).update();
 			children.get(i).postUpdate();
 		}
@@ -41,6 +42,7 @@ public class Group {
 	public void add(Basic object)
 	{
 		children.add(object);
+		object.create();
 	}
 	
 	/** 

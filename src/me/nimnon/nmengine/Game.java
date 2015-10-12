@@ -147,7 +147,7 @@ public class Game {
 		state.create();
 	}
 	
-	public static boolean overlap(GameObject object1, GameObject object2)
+	public static boolean overlap(Basic object1, Basic object2)
 	{
 		if(object1.x+object1.width-1 >= object2.x && object1.x <= object2.x+object2.width) {
 			if(object1.y+object1.height-1 >= object2.y && object1.y <= object2.y+object2.height) {
@@ -165,42 +165,36 @@ public class Game {
 	 */
 	public static boolean collide(GameObject object1, GameObject object2)
 	{
-		if(overlap(object1,object2))
+		if(overlap(object1, object2))
 		{
-			float moveX,moveY;
 			
-			float l = object2.x - ( object1.x + object1.width );
-		    float r = ( object2.x + object2.width ) - object1.x;
-		    float t = object2.y - ( object1.y + object1.height );
-		    float b = ( object2.y + object2.height ) - object1.y;
+			float d = object1.y - (object2.y + object2.height);
+			float u = (object1.y + object1.height) - object2.y;
+			float r = object1.x - (object2.x + object2.width);
+			float l = (object1.x + object1.width) - object2.x;
 			
-			moveX = Math.abs(l) < r ? l : r;
-			moveY = Math.abs(t) < b ? t : b;
+			float deltaY = Math.abs(u) > Math.abs(d) ? d : u;
+			float deltaX = Math.abs(l) > Math.abs(r) ? r : l;
 			
-			if(Math.abs(moveX) < Math.abs(moveY))
+			double timeToDeltaY = (object1.next.y - object1.y) / deltaY;
+			double timeToDeltaX = (object1.next.x - object1.x) / deltaX;
+			
+			if(Math.abs(timeToDeltaX) <= Math.abs(timeToDeltaY))
 			{
-				moveY = 0;
-				object1.velocity.x=0;
-				if(moveX < 0)
-					object1.touching[2] = true;
-				else
-					object1.touching[3] = true;
+				object1.y -= deltaY;
+				object1.velocity.y = 0;
 			}
 			else
 			{
-				moveX = 0;
-				object1.velocity.y=0;
-				if(moveY < 0)
-					object1.touching[0] = true;
-				else
-					object1.touching[1] = true;
+				object1.x -= deltaX;
+				object1.velocity.x = 0;
 			}
-			object1.x += moveX;
-			object1.y += moveY;
 			return true;
 		}
 		return false;
 	}
+	
+
 	
 	/**
 	 * Returns true if key was just pressed.
