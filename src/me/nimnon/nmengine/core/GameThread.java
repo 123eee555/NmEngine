@@ -1,4 +1,5 @@
 package me.nimnon.nmengine.core;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -19,51 +20,48 @@ public class GameThread extends JPanel implements Runnable {
 	 * Called when the GameThread starts.
 	 */
 	public void run() {
-		running  = true;
+		running = true;
 		gameLoop();
 	}
-	
+
 	/**
 	 * Method that starts the game loop.
 	 */
-	private void gameLoop()
-	{
+	private void gameLoop() {
 		long now = System.nanoTime();
 		long last = System.nanoTime();
 		long ns = 1000000000;
 		long delta = 0;
-		
-		while(running)
-		{
+
+		while (running) {
 			now = System.nanoTime();
-			delta += now-last;
-			
-			if(delta > ns/tps)
-			{
+			delta += now - last;
+
+			if (delta > ns / tps) {
 				update();
-				delta -= ns/tps;
+				delta -= ns / tps;
 			}
 			repaint();
 			last = now;
 		}
 	}
+
 	/**
-	 * Called directly from the game loop, calls update on the state which in turn updates everything else.
+	 * Called directly from the game loop, calls update on the state which in
+	 * turn updates everything else.
 	 */
-	private void update()
-	{
+	private void update() {
 		Game.currentState.update();
 		tps = Game.ticksPerSecond;
 	}
-	
+
 	/**
 	 * Redraws the window.
 	 */
-	public void paint(Graphics g)
-	{
+	public void paint(Graphics g) {
 		super.paint(g);
-		
-		Graphics2D g2d = (Graphics2D)g;
+
+		Graphics2D g2d = (Graphics2D) g;
 		Game.currentState.draw(g2d);
 	}
 

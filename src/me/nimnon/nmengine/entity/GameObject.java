@@ -11,10 +11,7 @@ import me.nimnon.nmengine.Game;
 public class GameObject extends Basic {
 
 	public Point2D acceleration = new Point2D(0, 0);
-	/**
-	 * Units traveled per second
-	 */
-	public Point2D velocity = new Point2D(0, 0);
+
 	/**
 	 * How much velocity is divided by every second
 	 */
@@ -23,14 +20,10 @@ public class GameObject extends Basic {
 	 * Max velocity of the object on each axis.
 	 */
 	public Point2D maxVelocity = new Point2D(0,0);
-	/**
-	 * Last position on each axis
-	 */
-	public Point last = new Point(0,0);
-	/**
-	 * Next predicted position on each axis
-	 */
-	public Point next = new Point(0,0);
+
+
+	
+	public boolean drawDebug = true;
 	
 	public boolean[] touching = new boolean[4];
 	public Color color = Color.black;
@@ -67,7 +60,7 @@ public class GameObject extends Basic {
 	}
 	
 	public void update() {
-		
+		super.update();
 	}
 	
 	public void postUpdate() {
@@ -93,8 +86,11 @@ public class GameObject extends Basic {
 
 	public void draw(Graphics2D g2d) {
 		// TODO Auto-generated method stub
-		g2d.setColor(color);
-		g2d.fillRect((int)x, (int)y, width, height);
+		if(drawDebug)
+		{
+			g2d.setColor(color);
+			g2d.drawRect((int)x, (int)y, width-1, height-1);
+		}
 	}
 
 }

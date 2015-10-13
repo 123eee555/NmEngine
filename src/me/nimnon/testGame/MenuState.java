@@ -6,6 +6,9 @@ import java.awt.Graphics2D;
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.Mouse;
 import me.nimnon.nmengine.entity.GameObject;
+import me.nimnon.nmengine.entity.Group;
+import me.nimnon.nmengine.entity.Sprite;
+import me.nimnon.nmengine.entity.Text;
 import me.nimnon.nmengine.state.State;
 
 public class MenuState extends State {
@@ -13,52 +16,75 @@ public class MenuState extends State {
 	Color color;
 	GameObject box;
 	GameObject box2;
-	GameObject box3;
-	//GameObject box4;
-	
+	Group group;
+
 	public void create() {
-		box = new GameObject(32, 32);
-		box2 = new GameObject(0,400);
-		add(box);
-		add(box2);
+		group = new Group();
+		add(group);
 		
-		box.drag.setLocation(1.2f,1.2f);
+		box = new Sprite();
+		box.drag.setLocation(1.2f, 1.2f);
 		box.color = Color.RED;
 		
-		box2.width=400;
-		box2.height=64;
+		add(box);
+
+		box2 = new GameObject(0, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
 		
-		box3 = new GameObject(402,400);
-		box3.width = 64;
-		box3.height = 128+64;
+		box2 = new GameObject(66, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
 		
-		add(box3);
+		box2 = new GameObject(66+66, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
+		
+		box2 = new GameObject(66+66+66, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
+		
+		box2 = new GameObject(66+66+66+66, 466);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
+		
+		box2 = new GameObject(66+66+66+66+66, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
+		
+		box2 = new GameObject(66+66+66+66+66, 400);
+		box2.width = 64;
+		box2.height = 64;
+		group.add(box2);
+		
+		Text text = new Text(26, 26, 32);
+		text.setText("YES", 32);
+		add(text);
+		
 	}
-	
+
 	public void update() {
 		super.update();
+
 		
-		Game.collide(box, box3);
-		Game.collide(box, box2);
+
+		box.drag.setLocation(1.1f, 1.1f);
+
+		box.acceleration.x = Game.mouse.x-box.center.x;
+		box.acceleration.y = Game.mouse.y-box.center.y;
 		
-		box.drag.setLocation(1.1f,1);
+
+		group.collide(box);
 		
-		box.acceleration.x = 32;
-		box.acceleration.y = 64;
-		
-		if(Game.mouse.mouse1Down)
-		{
-			box.acceleration.y = -16;
-		}
-		
-		if(box.x > 600)
-		{
-			box.x = -32;
-			box.y = 0;
-		}
 		
 	}
-	
+
 	public void draw(Graphics2D g2d) {
 		super.draw(g2d);
 	}
