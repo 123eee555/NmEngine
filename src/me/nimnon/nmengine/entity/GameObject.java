@@ -1,95 +1,43 @@
 package me.nimnon.nmengine.entity;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-
-import com.sun.javafx.geom.Point2D;
+import java.awt.geom.Point2D;
 
 import me.nimnon.nmengine.Game;
 
 public class GameObject extends Basic {
 
-	public Point2D acceleration = new Point2D(0, 0);
+	public double x = 0d;
+	public double y = 0d;
+	public double width = 16d;
+	public double height = 16d;
 
-	/**
-	 * How much velocity is divided by every second
-	 */
-	public Point2D drag = new Point2D(1f,1f);
-	/**
-	 * Max velocity of the object on each axis.
-	 */
-	public Point2D maxVelocity = new Point2D(0,0);
+	public Point2D.Double last = new Point2D.Double(0, 0);
+	public Point2D.Double next = new Point2D.Double(0, 0);
 
+	public Point2D.Double maxVelocity = new Point2D.Double(0, 0);
+	public Point2D.Double velocity = new Point2D.Double(0, 0);
+	public Point2D.Double drag = new Point2D.Double(0, 0);
 
-	
-	public boolean drawDebug = true;
-	
+	public Point2D.Double center = new Point2D.Double(x + (width / 2), y + (height / 2));
+
 	public boolean[] touching = new boolean[4];
-	public Color color = Color.black;
-	
+
 	public GameObject() {
-		super();
-		x = 0;
-		y = 0;
-	}
-	
-	public GameObject(int x,int y) {
-		super(x,y,32,32);
-		this.x = x;
-		this.y = y;
-		last.x = x;
-		last.y = y;
-	}
-	
-	public GameObject(int x,int y,int width, int height) {
-		super(x,y,width,height);
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		last.x = x;
-		last.y = y;
+		// TODO Auto-generated constructor stub
 	}
 
-	public void preUpdate() {
-		last.x = (int) x;
-		last.y = (int) y;
-		next.x = (int) (x+velocity.x/Game.ticksPerSecond);
-		next.y = (int) (y+velocity.y/Game.ticksPerSecond);
-	}
-	
 	public void update() {
-		super.update();
-	}
-	
-	public void postUpdate() {
-		velocity.x += acceleration.x;
-		velocity.y += acceleration.y;
-		
-		if(maxVelocity.x > 0)
-			velocity.x = Math.min(Math.max(velocity.x, -maxVelocity.x),maxVelocity.x);
-		if(maxVelocity.x > 0)
-			velocity.y = Math.min(Math.max(velocity.y, -maxVelocity.y),maxVelocity.y);
-		
-		x += velocity.x/Game.ticksPerSecond;
-		y += velocity.y/Game.ticksPerSecond;
-		
-		velocity.x /= drag.x;
-		velocity.y /= drag.y;
-		
-		touching[0] = false;
-		touching[1] = false;
-		touching[2] = false;
-		touching[3] = false;
+		center.setLocation(this.x+(width/2), this.y+(height/2));
 	}
 
-	public void draw(Graphics2D g2d) {
-		// TODO Auto-generated method stub
-		if(drawDebug)
-		{
-			g2d.setColor(color);
-			g2d.drawRect((int)x, (int)y, width-1, height-1);
+	public void draw() {
+		for (int i = 0; i < Game.cameras.size(); i++) {
+			if (Game.cameras.get(i).isOnScreen(this)) {
+				Camera cam = Game.cameras.get(i);
+				cam.imageGraphics.setColor(Color.red);
+				cam.imageGraphics.drawRect((int) (x - cam.x), (int) (y - cam.y), (int) width, (int) height);
+			}
 		}
 	}
 

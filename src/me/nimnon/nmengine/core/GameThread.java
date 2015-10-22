@@ -2,16 +2,14 @@ package me.nimnon.nmengine.core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
-
 import me.nimnon.nmengine.Game;
 
+/**
+ * Contains Update and Graphics loop
+ */
 public class GameThread extends JPanel implements Runnable {
 
-	/**
-	 * Contains Update and Graphics loop
-	 */
 	private static final long serialVersionUID = 1L;
 	private boolean running = false;
 	public int tps = 60;
@@ -62,7 +60,12 @@ public class GameThread extends JPanel implements Runnable {
 		super.paint(g);
 
 		Graphics2D g2d = (Graphics2D) g;
-		Game.currentState.draw(g2d);
+
+		for (int i = 0; i < Game.cameras.size(); i++) {
+			Game.cameras.get(i).draw(g2d);
+		}
+		
+		Game.currentState.draw();
 	}
 
 }

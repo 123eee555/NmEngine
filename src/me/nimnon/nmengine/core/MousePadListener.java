@@ -16,12 +16,18 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	public void mouseDragged(MouseEvent e) {
 		Game.mouse.x = e.getX();
 		Game.mouse.y = e.getY();
+
+		Game.mouse.xWorld = (e.getX() / Game.cameras.get(0).zoom) + Game.cameras.get(0).x;
+		Game.mouse.yWorld = (e.getY() / Game.cameras.get(0).zoom) + Game.cameras.get(0).y;
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		Game.mouse.x = e.getX();
 		Game.mouse.y = e.getY();
+
+		Game.mouse.xWorld = (e.getX() / Game.cameras.get(0).zoom) + Game.cameras.get(0).x;
+		Game.mouse.yWorld = (e.getY() / Game.cameras.get(0).zoom) + Game.cameras.get(0).y;
 
 	}
 
@@ -33,12 +39,22 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		Game.mouse.mouse1Down = true;
+		if (e.getButton() == MouseEvent.BUTTON1)
+			Game.mouse.mouse1Down = true;
+		if (e.getButton() == MouseEvent.BUTTON2)
+			Game.mouse.mouse2Down = true;
+		if (e.getButton() == MouseEvent.BUTTON3)
+			Game.mouse.mouse3Down = true;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		Game.mouse.mouse1Down = false;
+		if (e.getButton() == MouseEvent.BUTTON1)
+			Game.mouse.mouse1Down = false;
+		if (e.getButton() == MouseEvent.BUTTON2)
+			Game.mouse.mouse2Down = false;
+		if (e.getButton() == MouseEvent.BUTTON3)
+			Game.mouse.mouse3Down = false;
 	}
 
 	@Override

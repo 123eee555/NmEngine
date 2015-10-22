@@ -1,27 +1,19 @@
 package me.nimnon.nmengine;
 
-import java.awt.Graphics2D;
+public class Mouse{
 
-import me.nimnon.nmengine.entity.Basic;
-
-public class Mouse extends Basic {
+	public double x = 0d;
+	public double y = 0d;
+	
+	public double xWorld = 0d;
+	public double yWorld = 0d;
 
 	public boolean mouse1Down = false;
+	public boolean mouse2Down = false;
+	public boolean mouse3Down = false;
 	
 	public Mouse() {
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void draw(Graphics2D g2d) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 }
