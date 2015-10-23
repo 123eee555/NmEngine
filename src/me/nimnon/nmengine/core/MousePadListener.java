@@ -17,8 +17,8 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 		Game.mouse.x = e.getX();
 		Game.mouse.y = e.getY();
 
-		Game.mouse.xWorld = (e.getX() / Game.cameras.get(0).zoom) + Game.cameras.get(0).x;
-		Game.mouse.yWorld = (e.getY() / Game.cameras.get(0).zoom) + Game.cameras.get(0).y;
+		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + Game.activeCamera.x;
+		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + Game.activeCamera.y;
 	}
 
 	@Override
@@ -26,8 +26,8 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 		Game.mouse.x = e.getX();
 		Game.mouse.y = e.getY();
 
-		Game.mouse.xWorld = (e.getX() / Game.cameras.get(0).zoom) + Game.cameras.get(0).x;
-		Game.mouse.yWorld = (e.getY() / Game.cameras.get(0).zoom) + Game.cameras.get(0).y;
+		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + Game.activeCamera.x;
+		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + Game.activeCamera.y;
 
 	}
 

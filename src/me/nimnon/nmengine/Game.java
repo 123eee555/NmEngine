@@ -2,7 +2,6 @@ package me.nimnon.nmengine;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -10,7 +9,6 @@ import javax.swing.JFrame;
 import me.nimnon.nmengine.core.GameThread;
 import me.nimnon.nmengine.core.KeyboardListener;
 import me.nimnon.nmengine.core.MousePadListener;
-import me.nimnon.nmengine.entity.Basic;
 import me.nimnon.nmengine.entity.Camera;
 import me.nimnon.nmengine.entity.GameObject;
 import me.nimnon.nmengine.util.Rect;
@@ -26,18 +24,50 @@ import me.nimnon.nmengine.state.State;
 
 public class Game {
 
+	/**
+	 * Actual window
+	 */
 	private JFrame window;
+	
+	/**
+	 * GameThread component housed in the window, controls update and render loop
+	 */
 	private GameThread thread;
 
+	/**
+	 * Keyboard Listener that takes keyboard inputs
+	 */
 	private static KeyboardListener keyListener;
+	/**
+	 * Mouse Listener that takes mouse inputs and movements
+	 */
 	private MousePadListener mouseListener;
 
+	/**
+	 * Game updates per second
+	 */
 	public static int ticksPerSecond = 60;
 
+	/**
+	 * Static Mouse instance for getting mouse Properties
+	 */
 	public static Mouse mouse = new Mouse();
 
+	/**
+	 * Current focused camera
+	 */
+	public static Camera activeCamera;
+	
+	/**
+	 * List of total cameras
+	 */
 	public static ArrayList<Camera> cameras = new ArrayList<Camera>();
 
+	public static Color backgroundColor = Color.white;
+	
+	/**
+	 * Active state
+	 */
 	public static State currentState;
 
 	/**
@@ -59,7 +89,7 @@ public class Game {
 	 *            Background color of the application.
 	 */
 	public Game(int width, int height, String title, State state, int tps, Color backgroundColor) {
-		createGame(width, height, title, state, tps, Color.white);
+		createGame(width, height, title, state, tps, backgroundColor);
 	}
 
 	/**
@@ -82,6 +112,13 @@ public class Game {
 		createGame(width, height, title, state, tps, Color.white);
 	}
 
+	/**
+	 * Creates a new game with specified width, height, title, and state, the background color is white
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @param state
+	 */
 	public Game(int width, int height, String title, State state) {
 		createGame(width, height, title, state, 60, Color.white);
 	}
@@ -156,6 +193,7 @@ public class Game {
 		window.setResizable(false);
 
 		thread.setPreferredSize(new Dimension(width, height));
+		Game.backgroundColor = backgroundColor;
 		thread.setBackground(backgroundColor);
 		thread.setFocusable(true);
 		thread.requestFocus();
@@ -171,13 +209,12 @@ public class Game {
 		thread.addKeyListener(keyListener);
 
 		thread.requestFocus();
-
-		cameras.add(new Camera(0, 0, width, height, 3));
+		
+		activeCamera = new Camera(0, 0, width, height, 3);
+		cameras.add(activeCamera);
 		
 		switchState(state);
-
 		
-
 		thread.tps = ticksPerSecond;
 		new Thread(thread).start();
 
@@ -197,6 +234,7 @@ public class Game {
 			currentState.destroy();
 		currentState = state;
 		state.create();
+		
 	}
 
 	/**
@@ -204,7 +242,7 @@ public class Game {
 	 * 
 	 * @param object1
 	 * @param object2
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean overlap(GameObject object1, GameObject object2) {
 		if (object1.x + object1.width - 1 >= object2.x && object1.x <= object2.x + object2.width) {
@@ -225,7 +263,7 @@ public class Game {
 	 *            Object to collide
 	 * @param object2
 	 *            Other Object to collide
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean collide(GameObject object1, GameObject object2) {
 		return separateX(object1, object2) || separateY(object1, object2);
@@ -240,7 +278,7 @@ public class Game {
 	 * 
 	 * @param object1
 	 * @param object2
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean separateX(GameObject object1, GameObject object2) {
 		double overlap = 0;
@@ -249,15 +287,15 @@ public class Game {
 		double obj2delta = object2.x - object2.last.x;
 
 		if (obj1delta != obj2delta) {
-			double obj1deltaAbs = Math.abs(obj1delta);
-			double obj2deltaAbs = Math.abs(obj2delta);
+			//double obj1deltaAbs = Math.abs(obj1delta);
+			//double obj2deltaAbs = Math.abs(obj2delta);
 
 			Rect obj1rect = new Rect(object1.x + obj1delta, object1.last.y, object1.width + obj1delta, object1.height);
 			Rect obj2rect = new Rect(object2.x + obj2delta, object2.last.y, object2.width + obj2delta, object2.height);
 
 			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width)
 					&& (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height)) {
-				double maxOverlap = obj1deltaAbs + obj2deltaAbs + 4;
+				//double maxOverlap = obj1deltaAbs + obj2deltaAbs + 4;
 
 				if (obj1delta > obj2delta) {
 					object1.touching[3] = true;
@@ -291,7 +329,7 @@ public class Game {
 	 * 
 	 * @param object1
 	 * @param object2
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean separateY(GameObject object1, GameObject object2) {
 		double overlap = 0;
@@ -300,8 +338,8 @@ public class Game {
 		double obj2delta = object2.y - object2.last.y;
 
 		if (obj1delta != obj2delta) {
-			double obj1deltaAbs = Math.abs(obj1delta);
-			double obj2deltaAbs = Math.abs(obj2delta);
+			//double obj1deltaAbs = Math.abs(obj1delta);
+			//double obj2deltaAbs = Math.abs(obj2delta);
 
 			Rect obj1rect = new Rect(object1.x, object1.y - ((obj1delta > 0) ? obj1delta : 0), object1.width,
 					object1.height + obj1delta);
@@ -310,7 +348,7 @@ public class Game {
 
 			if ((obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height)
 					&& (obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width)) {
-				double maxOverlap = obj1deltaAbs + obj2deltaAbs + 4;
+				//double maxOverlap = obj1deltaAbs + obj2deltaAbs + 4;
 
 				if (obj1delta > obj2delta) {
 					overlap = object1.y + object1.height - object2.y;

@@ -11,10 +11,16 @@ import me.nimnon.nmengine.entity.Group;
 
 public class State extends Group {
 
+	/**
+	 * Creates state
+	 */
 	public State() {
 
 	}
 
+	/**
+	 * Called on update
+	 */
 	public void update() {
 		super.update();
 	}

@@ -1,11 +1,16 @@
 package me.nimnon.nmengine.entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import me.nimnon.nmengine.Game;
 
+/**
+ * Camera class, renders slice of the world specified at x and y
+ * 
+ * @author Nimnon
+ *
+ */
 public class Camera {
 
 	/**
@@ -41,7 +46,7 @@ public class Camera {
 	/**
 	 * World zoom
 	 */
-	public int zoom = 3;
+	public double zoom = 3;
 
 	public BufferedImage imageData;
 
@@ -58,17 +63,17 @@ public class Camera {
 	 * Sets up a camera
 	 * 
 	 * @param x
-	 *            Screen-space y
+	 *            - Screen-space y
 	 * @param y
-	 *            Screen-space y
+	 *            - Screen-space y
 	 * @param width
-	 *            Screen-space width
+	 *            - Screen-space width
 	 * @param height
-	 *            Screen-space height
+	 *            - Screen-space height
 	 * @param zoom
-	 *            Zoom amount
+	 *            - Zoom amount
 	 */
-	public Camera(double x, double y, double width, double height, int zoom) {
+	public Camera(double x, double y, double width, double height, double zoom) {
 		this.screenx = x;
 		this.screeny = y;
 		this.width = width;
@@ -77,22 +82,36 @@ public class Camera {
 		updateCamera();
 	}
 
-	public void updateCamera() {
+	/**
+	 * Called when width, height, or zoom changes
+	 */
+	private void updateCamera() {
 		imageData = new BufferedImage((int) (width / zoom), (int) (height / zoom), BufferedImage.TYPE_INT_ARGB);
 		imageGraphics = imageData.createGraphics();
 	}
 
+	/**
+	 * Called every render by the gameThread
+	 * 
+	 * @param g2d
+	 */
 	public void draw(Graphics2D g2d) {
-		
+
 		g2d.drawImage(imageData, (int) screenx, (int) screeny, (int) width, (int) height, null);
-		
-		imageGraphics.setColor(Color.white);
+
+		imageGraphics.setColor(Game.backgroundColor);
 		imageGraphics.fillRect(0, 0, imageData.getWidth(), imageData.getHeight());
 	}
 
+	/**
+	 * Check if object is on screen
+	 * 
+	 * @param object - Object to check
+	 * @return boolean
+	 */
 	public boolean isOnScreen(GameObject object) {
-		if (object.x + object.width - 1 >= x && object.x <= x + (width / zoom)) {
-			if (object.y + object.height - 1 >= y && object.y <= y + (height / zoom)) {
+		if (object.x + object.width >= x && object.x <= x + (width / zoom)) {
+			if (object.y + object.height >= y && object.y <= y + (height / zoom)) {
 				return true;
 			}
 		}

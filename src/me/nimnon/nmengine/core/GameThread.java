@@ -11,7 +11,15 @@ import me.nimnon.nmengine.Game;
 public class GameThread extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Controls the main game loop, should really never be set to false
+	 */
 	private boolean running = false;
+
+	/**
+	 * Updates per second
+	 */
 	public int tps = 60;
 
 	/**
@@ -39,7 +47,8 @@ public class GameThread extends JPanel implements Runnable {
 				update();
 				delta -= ns / tps;
 			}
-			repaint();
+			if (Game.currentState != null)
+				repaint();
 			last = now;
 		}
 	}
@@ -64,8 +73,8 @@ public class GameThread extends JPanel implements Runnable {
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			Game.cameras.get(i).draw(g2d);
 		}
-		
-		Game.currentState.draw();
+		if (Game.currentState != null)
+			Game.currentState.draw();
 	}
 
 }

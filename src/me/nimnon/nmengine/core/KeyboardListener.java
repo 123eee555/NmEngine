@@ -9,8 +9,8 @@ public class KeyboardListener implements KeyListener {
 	public boolean[] keysJustPressed;
 	
 	public KeyboardListener() {
-		keys = new boolean[512];
-		keysJustPressed = new boolean[512];
+		keys = new boolean[1024];
+		keysJustPressed = new boolean[1024];
 	}
 
 	@Override
