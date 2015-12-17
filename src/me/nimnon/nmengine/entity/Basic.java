@@ -6,48 +6,35 @@ package me.nimnon.nmengine.entity;
  * @author Nimnon
  *
  */
-public class Basic {
-
-	/**
-	 * Creates new basic
-	 */
-	public Basic() {
-		// TODO Auto-generated constructor stub
-	}
+public interface Basic {
 
 	/**
 	 * Called before update()
 	 */
-	public void preUpdate() {
-
-	}
+	public void preUpdate();
 
 	/**
 	 * Called when the State updates
 	 */
-	public void update() {
-
-	}
+	public abstract void update();
 
 	/**
 	 * Called after update()
 	 */
-	public void postUpdate() {
-
-	}
-
+	public void postUpdate();
+	
+	/**
+	 * Called on creation
+	 */
+	public abstract void create();
 	/**
 	 * Called when the State is rendering
 	 */
-	public void draw() {
-
-	}
+	public abstract void draw();
 
 	/**
 	 * Destroys object, currently non-functional
 	 */
-	public void destroy() {
-
-	}
+	public void destroy();
 
 }

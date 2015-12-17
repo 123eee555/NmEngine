@@ -27,6 +27,11 @@ public class GameThread extends JPanel implements Runnable {
 	 */
 	public void run() {
 		running = true;
+
+		System.out.println("////////////////////////");
+		System.out.printf("%-6s %s %7s \n", "/", " NmEngine", "/");
+		System.out.println("////////////////////////");
+
 		gameLoop();
 	}
 
@@ -36,20 +41,39 @@ public class GameThread extends JPanel implements Runnable {
 	private void gameLoop() {
 		long now = System.nanoTime();
 		long last = System.nanoTime();
+		long timer = System.currentTimeMillis();
+
+		int updates = 0;
+		int frames = 0;
+
 		long ns = 1000000000;
 		long delta = 0;
 
 		while (running) {
 			now = System.nanoTime();
 			delta += now - last;
-
 			if (delta > ns / tps) {
 				update();
+				repaint();
+				updates++;
+				frames++;
+				Game.elapsedTime = delta / 1000000000d;
+
 				delta -= ns / tps;
 			}
-			if (Game.currentState != null)
-				repaint();
+			if (Game.currentState != null) {
+				
+				
+			}
 			last = now;
+
+			if (System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				if(Game.debug)
+					System.out.println("FPS: " + frames + " TICKS: " + updates);
+				frames = 0;
+				updates = 0;
+			}
 		}
 	}
 
@@ -58,8 +82,15 @@ public class GameThread extends JPanel implements Runnable {
 	 * turn updates everything else.
 	 */
 	private void update() {
+		Game.currentState.preUpdate();
 		Game.currentState.update();
+		Game.currentState.postUpdate();
+		Game.activeCamera.update();
+		Game.activeCamera.update();
 		tps = Game.ticksPerSecond;
+
+		Game.mouse.xWorld = (Game.mouse.x / Game.activeCamera.zoom) + (Game.activeCamera.x);
+		Game.mouse.yWorld = (Game.mouse.y / Game.activeCamera.zoom) + (Game.activeCamera.y);
 	}
 
 	/**
@@ -70,11 +101,11 @@ public class GameThread extends JPanel implements Runnable {
 
 		Graphics2D g2d = (Graphics2D) g;
 
+		if (Game.currentState != null)
+			Game.currentState.draw();
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			Game.cameras.get(i).draw(g2d);
 		}
-		if (Game.currentState != null)
-			Game.currentState.draw();
 	}
 
 }

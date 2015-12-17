@@ -12,31 +12,40 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Called when the mouse is held down and moved
+	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		Game.mouse.x = e.getX();
-		Game.mouse.y = e.getY();
+		Game.mouse.x = (e.getX() / Game.activeCamera.zoom);
+		Game.mouse.y = (e.getY() / Game.activeCamera.zoom);
 
-		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + Game.activeCamera.x;
-		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + Game.activeCamera.y;
+		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + (Game.activeCamera.x);
+		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + (Game.activeCamera.y);
 	}
 
+	/**
+	 * Called when the mouse is moved and no buttons are pressed
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Game.mouse.x = e.getX();
-		Game.mouse.y = e.getY();
-
-		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + Game.activeCamera.x;
-		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + Game.activeCamera.y;
+		Game.mouse.x = (e.getX() / Game.activeCamera.zoom);
+		Game.mouse.y = (e.getY() / Game.activeCamera.zoom);
 
 	}
 
+	/**
+	 * Called after the mouse presses down, then up
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Called when the mouse is pressed down
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1)
@@ -47,6 +56,9 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 			Game.mouse.mouse3Down = true;
 	}
 
+	/**
+	 * Called when the mouse is unpressed
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1)
@@ -57,12 +69,18 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 			Game.mouse.mouse3Down = false;
 	}
 
+	/**
+	 * Called when the mouse enters parent component
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Called when the mouse leaves parent component
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub

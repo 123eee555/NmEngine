@@ -1,8 +1,10 @@
 package me.nimnon.nmengine.entity;
 
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.util.Random;
 
-import me.nimnon.nmengine.util.Rect;
+import me.nimnon.nmengine.Game;
 
 /**
  * Game object class, skeleton for the sprite class that handles motion and
@@ -11,12 +13,17 @@ import me.nimnon.nmengine.util.Rect;
  * @author Nimnon
  *
  */
-public class GameObject extends Basic {
+public class GameObject implements Basic {
 
 	/**
 	 * Position on respective axis
 	 */
 	public double x, y = 0d;
+
+	/**
+	 * Position paralax of this object in relation to cameras
+	 */
+	public Point2D.Double paralax = new Point2D.Double(1, 1);
 
 	/**
 	 * Size on respective axis
@@ -44,14 +51,19 @@ public class GameObject extends Basic {
 	public Point2D.Double velocity = new Point2D.Double(0, 0);
 
 	/**
+	 * Current acceleration in pixels per second
+	 */
+	public Point2D.Double acceleration = new Point2D.Double(0, 0);
+
+	/**
 	 * Drag on each axis
 	 */
-	public Point2D.Double drag = new Point2D.Double(0, 0);
+	public Point2D.Double drag = new Point2D.Double(1, 1);
 
 	/**
 	 * Center of the Object
 	 */
-	public Point2D.Double center = new Point2D.Double(x + (width / 2), y + (height / 2));
+	private Point2D.Double center = new Point2D.Double(x + (width / 2), y + (height / 2));
 
 	/**
 	 * Sides that are currently contacting another solid GameObject
@@ -68,8 +80,8 @@ public class GameObject extends Basic {
 	/**
 	 * Basic object class that handles sprite movement
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x Position on x axis
+	 * @param y Position on y axis
 	 */
 	public GameObject(double x, double y) {
 		this.x = x;
@@ -79,10 +91,10 @@ public class GameObject extends Basic {
 	/**
 	 * Basic object class that handles sprite movement
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x Position on x axis
+	 * @param y Position on y axis
+	 * @param width Object width
+	 * @param height Object height
 	 */
 	public GameObject(double x, double y, double width, double height) {
 		this.x = x;
@@ -95,9 +107,9 @@ public class GameObject extends Basic {
 	 * Basic object class that handles sprite movement
 	 * 
 	 * @param rect
-	 *            - Rectangle to define dimensions and location
+	 *            Rectangle to define dimensions and location
 	 */
-	public GameObject(Rect rect) {
+	public GameObject(Rectangle rect) {
 		x = rect.x;
 		y = rect.y;
 		width = rect.width;
@@ -105,13 +117,91 @@ public class GameObject extends Basic {
 	}
 
 	/**
-	 * Called every update, moves object and updates center
+	 * Gets Center of object as Point2D
+	 * 
+	 * @return center
 	 */
-	public void update() {
+	public Point2D.Double getCenter() {
 		center.setLocation(this.x + (width / 2), this.y + (height / 2));
+		return center;
+	}
+
+	public void update() {
+
+	}
+
+	public void preUpdate() {
+		last.x = x;
+		last.y = y;
+
+		next.x = x + velocity.x / Game.ticksPerSecond;
+		next.y = y + velocity.y / Game.ticksPerSecond;
+	}
+
+	public void postUpdate() {
+		updateMotion();
+		touching[0] = false;
+		touching[1] = false;
+		touching[2] = false;
+		touching[3] = false;
+	}
+
+	/**
+	 * Updates the position and motion of this gameObject
+	 */
+	private void updateMotion() {
+		last.setLocation(x, y);
+		next.setLocation(x + (velocity.x / Game.ticksPerSecond), y + (velocity.y / Game.ticksPerSecond));
+
+		velocity.x += acceleration.x / Game.ticksPerSecond;
+		velocity.y += acceleration.y / Game.ticksPerSecond;
+
+		velocity.y = Math.max(Math.min(velocity.y, maxVelocity.y), -maxVelocity.y);
+		velocity.x = Math.max(Math.min(velocity.x, maxVelocity.x), -maxVelocity.x);
+
+		x += velocity.x / Game.ticksPerSecond;
+		y += velocity.y / Game.ticksPerSecond;
+
+		if (velocity.x > 0) {
+			velocity.x -= drag.x / Game.ticksPerSecond;
+		} else {
+			velocity.x += drag.x / Game.ticksPerSecond;
+		}
+		if (velocity.y > 0) {
+			velocity.y -= drag.y / Game.ticksPerSecond;
+		} else {
+			velocity.y += drag.y / Game.ticksPerSecond;
+		}
+		if (Math.abs(velocity.x) <= drag.x / Game.ticksPerSecond && acceleration.x == 0) {
+			velocity.x = 0;
+		}
+
+		if (Math.abs(velocity.y) <= drag.y / Game.ticksPerSecond && acceleration.y == 0) {
+			velocity.y = 0;
+		}
 	}
 
 	public void draw() {
+	}
+
+	@Override
+	public void create() {
+		// TODO Auto-generated method stub
+		this.x += new Random().nextDouble() * 0.000001;
+		this.y += new Random().nextDouble() * 0.000001;
+	}
+
+	@Override
+	public void destroy() {
+		this.acceleration = null;
+		this.center = null;
+		this.drag = null;
+		this.velocity = null;
+		this.maxVelocity = null;
+		this.next = null;
+		this.last = null;
+		this.touching = null;
+
 	}
 
 }

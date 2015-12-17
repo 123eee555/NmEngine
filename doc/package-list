@@ -1,5 +1,7 @@
 me.nimnon.nmengine
 me.nimnon.nmengine.core
 me.nimnon.nmengine.entity
+me.nimnon.nmengine.entity.tile
+me.nimnon.nmengine.entity.ui
 me.nimnon.nmengine.state
 me.nimnon.nmengine.util
