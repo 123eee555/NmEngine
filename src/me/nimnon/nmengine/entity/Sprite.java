@@ -142,6 +142,8 @@ public class Sprite extends GameObject {
 		g2d.fillRect(0, 0, width, height);
 		this.width = width;
 		this.height = height;
+		imageWidth = (int) width;
+		imageHeight = (int) height;
 	}
 
 	/**
@@ -203,7 +205,7 @@ public class Sprite extends GameObject {
 	 *            - Path to image
 	 */
 	public void setGraphic(String path) {
-		File img = new File("assets/" + path);
+		File img = new File("../NmEngine/assets/" + path);
 		try {
 			image = ImageIO.read(img);
 			this.width = image.getWidth();

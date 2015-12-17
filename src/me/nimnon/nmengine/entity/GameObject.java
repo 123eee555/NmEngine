@@ -80,8 +80,10 @@ public class GameObject implements Basic {
 	/**
 	 * Basic object class that handles sprite movement
 	 * 
-	 * @param x Position on x axis
-	 * @param y Position on y axis
+	 * @param x
+	 *            Position on x axis
+	 * @param y
+	 *            Position on y axis
 	 */
 	public GameObject(double x, double y) {
 		this.x = x;
@@ -91,10 +93,14 @@ public class GameObject implements Basic {
 	/**
 	 * Basic object class that handles sprite movement
 	 * 
-	 * @param x Position on x axis
-	 * @param y Position on y axis
-	 * @param width Object width
-	 * @param height Object height
+	 * @param x
+	 *            Position on x axis
+	 * @param y
+	 *            Position on y axis
+	 * @param width
+	 *            Object width
+	 * @param height
+	 *            Object height
 	 */
 	public GameObject(double x, double y, double width, double height) {
 		this.x = x;
@@ -131,11 +137,7 @@ public class GameObject implements Basic {
 	}
 
 	public void preUpdate() {
-		last.x = x;
-		last.y = y;
 
-		next.x = x + velocity.x / Game.ticksPerSecond;
-		next.y = y + velocity.y / Game.ticksPerSecond;
 	}
 
 	public void postUpdate() {
@@ -156,8 +158,10 @@ public class GameObject implements Basic {
 		velocity.x += acceleration.x / Game.ticksPerSecond;
 		velocity.y += acceleration.y / Game.ticksPerSecond;
 
-		velocity.y = Math.max(Math.min(velocity.y, maxVelocity.y), -maxVelocity.y);
-		velocity.x = Math.max(Math.min(velocity.x, maxVelocity.x), -maxVelocity.x);
+		if (maxVelocity.y != 0)
+			velocity.y = Math.max(Math.min(velocity.y, maxVelocity.y), -maxVelocity.y);
+		if (maxVelocity.x != 0)
+			velocity.x = Math.max(Math.min(velocity.x, maxVelocity.x), -maxVelocity.x);
 
 		x += velocity.x / Game.ticksPerSecond;
 		y += velocity.y / Game.ticksPerSecond;

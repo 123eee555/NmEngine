@@ -23,8 +23,8 @@ public class Fonts {
 	 */
 	public Fonts() {
 		try {
-			yoster = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/yoster.ttf")).deriveFont(Font.PLAIN, 20);
-			boocity = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/boocity.ttf")).deriveFont(Font.PLAIN, 20);
+			yoster = Font.createFont(Font.TRUETYPE_FONT, new File("../NmEngine/assets/fonts/yoster.ttf")).deriveFont(Font.PLAIN, 20);
+			boocity = Font.createFont(Font.TRUETYPE_FONT, new File("../NmEngine/assets/fonts/boocity.ttf")).deriveFont(Font.PLAIN, 20);
 		} catch (FontFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
