@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.entity.Basic;
 import me.nimnon.nmengine.entity.GameObject;
+import me.nimnon.nmengine.entity.Sprite;
 import me.nimnon.nmengine.entity.tile.TileMap;
 
 /**
@@ -163,10 +164,10 @@ public class Camera {
 	 * @return boolean Is the object on screen?
 	 */
 	public boolean isOnScreen(Basic o1) {
-		if (o1 instanceof GameObject) {
-			GameObject object = (GameObject) o1;
-			if ((object.x) + object.width >= x * object.paralax.x && (object.x) <= (x * object.paralax.x) + (width / zoom)) {
-				if ((object.y) + object.width >= y * object.paralax.y && (object.y) <= (y * object.paralax.y) + (height / zoom)) {
+		if (o1 instanceof Sprite) {
+			Sprite object = (Sprite) o1;
+			if ((object.x) + (object.imageWidth - object.offsetX) >= x * object.paralax.x && (object.x - object.offsetX) <= (x * object.paralax.x) + (width / zoom)) {
+				if ((object.y) + (object.imageHeight - object.offsetY) >= y * object.paralax.y && (object.y - object.offsetY) <= (y * object.paralax.y) + (height / zoom)) {
 					return true;
 				}
 			}
