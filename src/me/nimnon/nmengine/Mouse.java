@@ -16,9 +16,33 @@ public class Mouse{
 	 * Is respective mouse button down?
 	 */
 	public boolean mouse1Down, mouse2Down, mouse3Down = false;
+
+	public boolean mouse1JustPressed, mouse2JustPressed, mouse3JustPressed = false;
 	
 	public Mouse() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public boolean getMouse1JustPressed() {
+		if(mouse1JustPressed) {
+			mouse1JustPressed = false;
+			return true;
+		} else
+			return false;
+	}
+	public boolean getMouse2JustPressed() {
+		if(mouse2JustPressed) {
+			mouse2JustPressed = false;
+			return true;
+		} else
+			return false;
+	}
+	public boolean getMouse3JustPressed() {
+		if(mouse3JustPressed) {
+			mouse3JustPressed = false;
+			return true;
+		} else
+			return false;
 	}
 	
 }

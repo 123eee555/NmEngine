@@ -71,6 +71,11 @@ public class GameObject implements Basic {
 	public boolean[] touching = new boolean[4];
 
 	/**
+	 * Whether or not the GameObject is motile
+	 */
+	public boolean movable = true;
+	
+	/**
 	 * Basic object class that handles sprite movement
 	 */
 	public GameObject() {

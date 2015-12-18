@@ -48,12 +48,21 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1)
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			if(!Game.mouse.mouse1Down)
+				Game.mouse.mouse1JustPressed = true;
 			Game.mouse.mouse1Down = true;
-		if (e.getButton() == MouseEvent.BUTTON2)
+		}
+		if (e.getButton() == MouseEvent.BUTTON2) {
+			if(!Game.mouse.mouse2Down)
+				Game.mouse.mouse2JustPressed = true;
 			Game.mouse.mouse2Down = true;
-		if (e.getButton() == MouseEvent.BUTTON3)
+		}
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			if(!Game.mouse.mouse3Down)
+				Game.mouse.mouse3JustPressed = true;
 			Game.mouse.mouse3Down = true;
+		}
 	}
 
 	/**
@@ -61,12 +70,18 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1)
+		if (e.getButton() == MouseEvent.BUTTON1){
 			Game.mouse.mouse1Down = false;
-		if (e.getButton() == MouseEvent.BUTTON2)
+			Game.mouse.mouse1JustPressed = false;
+		}
+		if (e.getButton() == MouseEvent.BUTTON2){
 			Game.mouse.mouse2Down = false;
-		if (e.getButton() == MouseEvent.BUTTON3)
-			Game.mouse.mouse3Down = false;
+			Game.mouse.mouse2JustPressed = false;
+		}
+		if (e.getButton() == MouseEvent.BUTTON3){
+			Game.mouse.mouse2Down = false;
+			Game.mouse.mouse2JustPressed = false;
+		}
 	}
 
 	/**

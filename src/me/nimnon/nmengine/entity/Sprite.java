@@ -100,7 +100,7 @@ public class Sprite extends GameObject {
 	 */
 	public Sprite(double x, double y) {
 		super(x, y);
-		setGraphic("default.png");
+		setGraphic("../NmEngine/assets/default.png");
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class Sprite extends GameObject {
 	 *            - Height of sprite (Used for splitting the spritesheet)
 	 */
 	public void setGraphic(String path, boolean animated, int width, int height) {
-		File img = new File("assets/" + path);
+		File img = new File(path);
 		try {
 			image = ImageIO.read(img);
 			this.width = width;
@@ -205,7 +205,7 @@ public class Sprite extends GameObject {
 	 *            - Path to image
 	 */
 	public void setGraphic(String path) {
-		File img = new File("../NmEngine/assets/" + path);
+		File img = new File(path);
 		try {
 			image = ImageIO.read(img);
 			this.width = image.getWidth();
