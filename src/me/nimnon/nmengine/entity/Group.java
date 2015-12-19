@@ -16,6 +16,12 @@ public class Group implements Basic {
 	 * Children Array
 	 */
 	public ArrayList<Basic> children = new ArrayList<Basic>();
+	
+	/**
+	 * Sort this array by children's y axis?
+	 * Useful for top-down games
+	 */
+	private boolean sortByY = false;
 
 	/**
 	 * Creates an empty group
@@ -40,7 +46,9 @@ public class Group implements Basic {
 			}
 
 		}
-		sortByPosY();
+		if(sortByY )
+			sortByPosY();
+		
 	}
 
 	/**
@@ -79,20 +87,6 @@ public class Group implements Basic {
 	}
 
 	public void sortByPosY() {
-		/*
-		 * int highestY = Integer.MIN_VALUE; ArrayList<Basic> newChildren = new
-		 * ArrayList<>(); for (int i = 0; i < children.size(); i++) { Basic
-		 * child = children.get(i);
-		 * 
-		 * if (child instanceof GameObject) { GameObject gchild = (GameObject)
-		 * child; if (gchild.y >= highestY) { newChildren.add(0, gchild);
-		 * highestY = (int) gchild.y; System.out.println("Moved "
-		 * +child.getClass().getSimpleName()+" to the top!"); } else {
-		 * newChildren.add(gchild); System.out.println("Moved "
-		 * +child.getClass().getSimpleName()+" to the bottom!"); }
-		 * 
-		 * } } System.out.println("--------------"); children = newChildren;
-		 */
 		try {
 		Collections.sort(children, new Comparator<Basic>() {
 			public int compare(Basic o1b, Basic o2b) {
