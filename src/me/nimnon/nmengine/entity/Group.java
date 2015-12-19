@@ -29,9 +29,15 @@ public class Group implements Basic {
 	 */
 	public void update() {
 		for (int i = 0; i < children.size(); i++) {
-			children.get(i).preUpdate();
-			children.get(i).update();
-			children.get(i).postUpdate();
+			try {
+				children.get(i).preUpdate();
+				children.get(i).update();
+				children.get(i).postUpdate();
+			} catch (NullPointerException | IndexOutOfBoundsException e) {
+				// This happens when the children are cleared during an update,
+				// break the loop
+				break;
+			}
 
 		}
 		sortByPosY();
@@ -42,7 +48,11 @@ public class Group implements Basic {
 	 */
 	public void draw() {
 		for (int i = 0; i < children.size(); i++) {
-			children.get(i).draw();
+			try {
+				children.get(i).draw();
+			} catch (IndexOutOfBoundsException e) {
+				break;
+			}
 		}
 	}
 
@@ -83,7 +93,7 @@ public class Group implements Basic {
 		 * 
 		 * } } System.out.println("--------------"); children = newChildren;
 		 */
-
+		try {
 		Collections.sort(children, new Comparator<Basic>() {
 			public int compare(Basic o1b, Basic o2b) {
 				if (o1b instanceof GameObject && o2b instanceof GameObject) {
@@ -100,6 +110,9 @@ public class Group implements Basic {
 
 			}
 		});
+		} catch(IndexOutOfBoundsException | NullPointerException e) {
+			//Donchu crash you group u
+		}
 
 	}
 
@@ -119,8 +132,8 @@ public class Group implements Basic {
 	}
 
 	public void destroy() {
-		// TODO Auto-generated method stub
-
+		this.children.clear();
+		this.children = null;
 	}
 
 }

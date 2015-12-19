@@ -126,7 +126,8 @@ public class Camera {
 	/**
 	 * Called every render by the gameThread
 	 * 
-	 * @param g2d Graphics to draw to
+	 * @param g2d
+	 *            Graphics to draw to
 	 */
 	public void draw(Graphics2D g2d) {
 
@@ -141,8 +142,10 @@ public class Camera {
 	 * Sets this camera to folow specified object, higher lerp makes the
 	 * folowing more smooth. lerp can be one at the lowest
 	 * 
-	 * @param object Object to folow
-	 * @param lerp Lerp value
+	 * @param object
+	 *            Object to folow
+	 * @param lerp
+	 *            Lerp value
 	 */
 	public void folow(GameObject object, double lerp) {
 		this.target = object;
@@ -151,7 +154,7 @@ public class Camera {
 		else
 			this.lerp = 1;
 	}
-	
+
 	public void stopFolowing() {
 		target = null;
 		lerp = 1;
@@ -160,14 +163,24 @@ public class Camera {
 	/**
 	 * Check if object is on screen
 	 * 
-	 * @param o1 Object to check
+	 * @param o1
+	 *            Object to check
 	 * @return boolean Is the object on screen?
 	 */
 	public boolean isOnScreen(Basic o1) {
 		if (o1 instanceof Sprite) {
 			Sprite object = (Sprite) o1;
-			if ((object.x) + (object.imageWidth - object.offsetX) >= x * object.paralax.x && (object.x - object.offsetX) <= (x * object.paralax.x) + (width / zoom)) {
-				if ((object.y) + (object.imageHeight - object.offsetY) >= y * object.paralax.y && (object.y - object.offsetY) <= (y * object.paralax.y) + (height / zoom)) {
+			if ((object.x) + (object.imageWidth - object.offsetX) >= x * object.paralax.x
+					&& (object.x - object.offsetX) <= (x * object.paralax.x) + (width / zoom)) {
+				if ((object.y) + (object.imageHeight - object.offsetY) >= y * object.paralax.y
+						&& (object.y - object.offsetY) <= (y * object.paralax.y) + (height / zoom)) {
+					return true;
+				}
+			}
+		} else if (o1 instanceof GameObject) {
+			GameObject object = (GameObject) o1;
+			if ((object.x) + (object.width) >= x * object.paralax.x && (object.x) <= (x * object.paralax.x) + (width / zoom)) {
+				if ((object.y) + (object.height) >= y * object.paralax.y && (object.y) <= (y * object.paralax.y) + (height / zoom)) {
 					return true;
 				}
 			}

@@ -27,7 +27,7 @@ public class Text extends GameObject implements Basic {
 	/**
 	 * Color of the text
 	 */
-	public Color color = Color.getHSBColor((float)Math.random(), 0.5f, 0.9f);
+	public Color color = Color.black;
 
 	/**
 	 * Creates a text object with the specified position, text, and scale
