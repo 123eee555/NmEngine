@@ -13,7 +13,7 @@ import me.nimnon.nmengine.Game;
  * @author Nimnon
  *
  */
-public class GameObject implements Basic {
+public class GameObject extends Basic {
 
 	/**
 	 * Position on respective axis
@@ -202,15 +202,7 @@ public class GameObject implements Basic {
 
 	@Override
 	public void destroy() {
-		this.acceleration = null;
-		this.center = null;
-		this.drag = null;
-		this.velocity = null;
-		this.maxVelocity = null;
-		this.next = null;
-		this.last = null;
-		this.touching = null;
-
+		this.parent.children.remove(this);
 	}
 
 }

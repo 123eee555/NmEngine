@@ -12,7 +12,7 @@ import me.nimnon.nmengine.core.Camera;
 import me.nimnon.nmengine.entity.Basic;
 import me.nimnon.nmengine.entity.Group;
 
-public class TileMap implements Basic {
+public class TileMap extends Basic {
 
 	/**
 	 * The image used to draw the tilemap after building

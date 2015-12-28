@@ -6,12 +6,17 @@ package me.nimnon.nmengine.entity;
  * @author Nimnon
  *
  */
-public interface Basic {
-
+public abstract class Basic {
+	
+	/**
+	 * Whatever group this basic is a member of, game states have no parent
+	 */
+	public Group parent;
+	
 	/**
 	 * Called before update()
 	 */
-	public void preUpdate();
+	public abstract void preUpdate();
 
 	/**
 	 * Called when the State updates
@@ -21,7 +26,7 @@ public interface Basic {
 	/**
 	 * Called after update()
 	 */
-	public void postUpdate();
+	public abstract void postUpdate();
 	
 	/**
 	 * Called on creation
@@ -35,6 +40,6 @@ public interface Basic {
 	/**
 	 * Destroys object, currently non-functional
 	 */
-	public void destroy();
+	public abstract void destroy();
 
 }

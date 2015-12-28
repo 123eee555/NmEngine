@@ -85,8 +85,9 @@ public class GameThread extends JPanel implements Runnable {
 		Game.currentState.preUpdate();
 		Game.currentState.update();
 		Game.currentState.postUpdate();
-		Game.activeCamera.update();
-		Game.activeCamera.update();
+		for (int i = 0; i < Game.cameras.size(); i++) {
+			Game.activeCamera.update();
+		}
 		tps = Game.ticksPerSecond;
 
 		Game.mouse.xWorld = (Game.mouse.x / Game.activeCamera.zoom) + (Game.activeCamera.x);

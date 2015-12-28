@@ -10,7 +10,7 @@ import java.util.Comparator;
  * @author Nimnon
  *
  */
-public class Group implements Basic {
+public class Group extends Basic {
 
 	/**
 	 * Children Array
@@ -72,6 +72,7 @@ public class Group implements Basic {
 	 */
 	public void add(Basic object) {
 		children.add(object);
+		object.parent = this;
 		object.create();
 	}
 
