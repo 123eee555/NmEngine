@@ -5,7 +5,6 @@ import java.awt.Font;
 
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.core.Camera;
-import me.nimnon.nmengine.entity.Basic;
 import me.nimnon.nmengine.entity.GameObject;
 
 public class Text extends GameObject{
