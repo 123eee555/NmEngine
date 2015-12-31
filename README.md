@@ -12,4 +12,4 @@ NmEngine is a simple 2d Java game engine
 # Resources
 - Website (Incomplete!): http://nimnon.me
 - Yoster Island Font: http://www.1001fonts.com/yoster-island-font.html
-- Boo City Font: http://www.1001fonts.com/boo-city-font.html
+- Boo City Font: https://www.tylerfinck.com/2014/04/pixelcounty/
