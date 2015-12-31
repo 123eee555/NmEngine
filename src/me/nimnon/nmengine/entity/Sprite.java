@@ -74,13 +74,12 @@ public class Sprite extends GameObject {
 	/**
 	 * Flip the graphic on the respective axis?
 	 */
-	public boolean flipX,flipY = false;
-	
-	
+	public boolean flipX, flipY = false;
+
 	/**
 	 * Offset the sprite by this number of pixels on specified axis
 	 */
-	public int offsetX,offsetY = 0;
+	public int offsetX, offsetY = 0;
 
 	/**
 	 * Creates basic instance of a Sprite, uses the default graphic
@@ -95,8 +94,10 @@ public class Sprite extends GameObject {
 	 * Creates basic instance of a Sprite at position x and y, uses the default
 	 * graphic
 	 * 
-	 * @param x Position on x axis
-	 * @param y Position on y axis
+	 * @param x
+	 *            Position on x axis
+	 * @param y
+	 *            Position on y axis
 	 */
 	public Sprite(double x, double y) {
 		super(x, y);
@@ -107,10 +108,14 @@ public class Sprite extends GameObject {
 	 * Creates basic instance of a Sprite at position x and y, creates graphic
 	 * to size using a random color
 	 * 
-	 * @param x Position on x axis
-	 * @param y Position on y axis
-	 * @param width Width of object
-	 * @param height Height of object
+	 * @param x
+	 *            Position on x axis
+	 * @param y
+	 *            Position on y axis
+	 * @param width
+	 *            Width of object
+	 * @param height
+	 *            Height of object
 	 */
 	public Sprite(double x, double y, double width, double height) {
 		super(x, y, width, height);
@@ -121,7 +126,8 @@ public class Sprite extends GameObject {
 	 * Creates basic instance of a Sprite with the dimensions of the supplied
 	 * Rect, creates graphic to size using a random color
 	 * 
-	 * @param rect Dimensions to use
+	 * @param rect
+	 *            Dimensions to use
 	 */
 	public Sprite(Rectangle rect) {
 		super(rect);
@@ -131,9 +137,12 @@ public class Sprite extends GameObject {
 	/**
 	 * Creates a rectangle for a graphic
 	 * 
-	 * @param width Width of graphic
-	 * @param height Height of graphic
-	 * @param color Graphic color
+	 * @param width
+	 *            Width of graphic
+	 * @param height
+	 *            Height of graphic
+	 * @param color
+	 *            Graphic color
 	 */
 	public void makeGraphic(int width, int height, Color color) {
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -149,7 +158,8 @@ public class Sprite extends GameObject {
 	/**
 	 * Creates graphic to width and height automatically
 	 * 
-	 * @param color Graphic color
+	 * @param color
+	 *            Graphic color
 	 */
 	public void makeGraphic(Color color) {
 		image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
@@ -220,10 +230,15 @@ public class Sprite extends GameObject {
 
 	/**
 	 * Add new animation
-	 * @param name Animation name
-	 * @param frames Frray of frames
-	 * @param framerate Framerate in Frames per second
-	 * @param loops Does the animation loop?
+	 * 
+	 * @param name
+	 *            Animation name
+	 * @param frames
+	 *            Array of frames
+	 * @param framerate
+	 *            Framerate in Frames per second
+	 * @param loops
+	 *            Does the animation loop?
 	 */
 	public void addAnim(String name, int[] frames, int framerate, boolean loops) {
 		anims.add(new Animation(name, framerate, frames, loops));
@@ -231,7 +246,9 @@ public class Sprite extends GameObject {
 
 	/**
 	 * Play animation
-	 * @param name Animation to play
+	 * 
+	 * @param name
+	 *            Animation to play
 	 */
 	public void playAnim(String name) {
 		if (name != curAnim.name) {
@@ -251,30 +268,31 @@ public class Sprite extends GameObject {
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			if (Game.cameras.get(i).isOnScreen(this)) {
 				Camera cam = Game.cameras.get(i);
+				if (imageWidth != 0 && imageHeight != 0 && image.getWidth() != 0 && image.getHeight() != 0) {
+					BufferedImage image2 = image.getSubimage((int) ((index * imageWidth) % image.getWidth()),
+							(int) (Math.floor(index / (image.getWidth() / imageWidth)) * imageHeight), (int) imageWidth, (int) imageHeight);
 
-				BufferedImage image2 = image.getSubimage((int) ((index * imageWidth) % image.getWidth()),
-						(int) (Math.floor(index / (image.getWidth() / imageWidth)) * imageHeight),
-						(int) imageWidth,
-						(int) imageHeight);
-				
-				if(flipX) {
-					AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-					tx.translate(-imageWidth, 0);
-					AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-					image2 = op.filter(image2, null);
-				}
-				if(flipY) {
-					AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
-					tx.translate(0, -imageHeight);
-					AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-					image2 = op.filter(image2, null);
-				}
-				
-				cam.imageGraphics.drawImage(image2, (int)x-(int)(Game.cameras.get(i).x*paralax.x)-(int)offsetX, (int)y-(int)(Game.cameras.get(i).y*paralax.y)-(int)offsetY, null);
+					if (flipX) {
+						AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+						tx.translate(-imageWidth, 0);
+						AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+						image2 = op.filter(image2, null);
+					}
+					if (flipY) {
+						AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+						tx.translate(0, -imageHeight);
+						AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+						image2 = op.filter(image2, null);
+					}
 
-				if (drawDebug) {
-					cam.imageGraphics.setColor(color);
-					cam.imageGraphics.drawRect((int)x-(int)(Game.cameras.get(i).x*paralax.x), (int)y-(int)(Game.cameras.get(i).y * paralax.y), (int)(width - 1), (int)(height - 1));
+					cam.imageGraphics.drawImage(image2, (int) x - (int) (Game.cameras.get(i).x * paralax.x) - (int) offsetX,
+							(int) y - (int) (Game.cameras.get(i).y * paralax.y) - (int) offsetY, null);
+
+					if (drawDebug) {
+						cam.imageGraphics.setColor(color);
+						cam.imageGraphics.drawRect((int) x - (int) (Game.cameras.get(i).x * paralax.x), (int) y - (int) (Game.cameras.get(i).y * paralax.y),
+								(int) (width-1), (int) (height-1));
+					}
 				}
 			}
 		}

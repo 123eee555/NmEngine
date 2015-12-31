@@ -18,11 +18,6 @@ public class GameThread extends JPanel implements Runnable {
 	private boolean running = false;
 
 	/**
-	 * Updates per second
-	 */
-	public int tps = 60;
-
-	/**
 	 * Called when the GameThread starts.
 	 */
 	public void run() {
@@ -39,6 +34,9 @@ public class GameThread extends JPanel implements Runnable {
 	 * Method that starts the game loop.
 	 */
 	private void gameLoop() {
+		
+		int tps = Game.ticksPerSecond;
+		
 		long now = System.nanoTime();
 		long last = System.nanoTime();
 		long timer = System.currentTimeMillis();
@@ -52,20 +50,27 @@ public class GameThread extends JPanel implements Runnable {
 		while (running) {
 			now = System.nanoTime();
 			delta += now - last;
-			if (delta > ns / tps) {
+			if (delta > ns / (tps)) {
 				update();
-				repaint();
+				
 				updates++;
 				frames++;
 				Game.elapsedTime = delta / 1000000000d;
 
-				delta -= ns / tps;
+				delta -= ns / (tps);
 			}
 			if (Game.currentState != null) {
 				
-				
+				repaint();
 			}
 			last = now;
+			
+			try {
+				Thread.sleep((long)((1000/tps)*0.6));
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
@@ -82,16 +87,16 @@ public class GameThread extends JPanel implements Runnable {
 	 * turn updates everything else.
 	 */
 	private void update() {
+		
 		Game.currentState.preUpdate();
 		Game.currentState.update();
 		Game.currentState.postUpdate();
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			Game.activeCamera.update();
 		}
-		tps = Game.ticksPerSecond;
+		
 
-		Game.mouse.xWorld = (Game.mouse.x / Game.activeCamera.zoom) + (Game.activeCamera.x);
-		Game.mouse.yWorld = (Game.mouse.y / Game.activeCamera.zoom) + (Game.activeCamera.y);
+
 	}
 
 	/**

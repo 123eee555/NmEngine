@@ -17,11 +17,11 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		Game.mouse.x = (e.getX() / Game.activeCamera.zoom);
-		Game.mouse.y = (e.getY() / Game.activeCamera.zoom);
+		Game.mouse.setX((e.getX()));
+		Game.mouse.setY((e.getY()));
 
-		Game.mouse.xWorld = (e.getX() / Game.activeCamera.zoom) + (Game.activeCamera.x);
-		Game.mouse.yWorld = (e.getY() / Game.activeCamera.zoom) + (Game.activeCamera.y);
+		Game.mouse.setxWorld((e.getX()/ Game.activeCamera.zoom) + (Game.activeCamera.x));
+		Game.mouse.setyWorld((e.getY()/ Game.activeCamera.zoom) + (Game.activeCamera.y));
 	}
 
 	/**
@@ -29,8 +29,11 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Game.mouse.x = (e.getX() / Game.activeCamera.zoom);
-		Game.mouse.y = (e.getY() / Game.activeCamera.zoom);
+		Game.mouse.setX((e.getX()));
+		Game.mouse.setY((e.getY()));
+		
+		Game.mouse.setxWorld((e.getX()/ Game.activeCamera.zoom) + (Game.activeCamera.x));
+		Game.mouse.setyWorld((e.getY()/ Game.activeCamera.zoom) + (Game.activeCamera.y));
 
 	}
 
@@ -49,19 +52,19 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			if(!Game.mouse.mouse1Down)
-				Game.mouse.mouse1JustPressed = true;
-			Game.mouse.mouse1Down = true;
+			if(!Game.mouse.getMouse1Down())
+				Game.mouse.setMouse1JustPressed(true);
+			Game.mouse.setMouse1Down(true);
 		}
 		if (e.getButton() == MouseEvent.BUTTON2) {
-			if(!Game.mouse.mouse2Down)
-				Game.mouse.mouse2JustPressed = true;
-			Game.mouse.mouse2Down = true;
+			if(!Game.mouse.getMouse2Down())
+				Game.mouse.setMouse2JustPressed(true);
+			Game.mouse.setMouse2Down(true);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3) {
-			if(!Game.mouse.mouse3Down)
-				Game.mouse.mouse3JustPressed = true;
-			Game.mouse.mouse3Down = true;
+			if(!Game.mouse.getMouse3Down())
+				Game.mouse.setMouse3JustPressed(true);
+			Game.mouse.setMouse3Down(true);
 		}
 	}
 
@@ -71,16 +74,16 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1){
-			Game.mouse.mouse1Down = false;
-			Game.mouse.mouse1JustPressed = false;
+			Game.mouse.setMouse1Down(false);
+			Game.mouse.setMouse3JustPressed(false);
 		}
 		if (e.getButton() == MouseEvent.BUTTON2){
-			Game.mouse.mouse2Down = false;
-			Game.mouse.mouse2JustPressed = false;
+			Game.mouse.setMouse2Down(false);
+			Game.mouse.setMouse2JustPressed(false);
 		}
 		if (e.getButton() == MouseEvent.BUTTON3){
-			Game.mouse.mouse2Down = false;
-			Game.mouse.mouse2JustPressed = false;
+			Game.mouse.setMouse3Down(false);
+			Game.mouse.setMouse3JustPressed(false);
 		}
 	}
 

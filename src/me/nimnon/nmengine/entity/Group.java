@@ -15,19 +15,19 @@ public class Group extends Basic {
 	/**
 	 * Children Array
 	 */
-	public ArrayList<Basic> children = new ArrayList<Basic>();
+	private ArrayList<Basic> children = new ArrayList<Basic>();
 	
 	/**
 	 * Sort this array by children's y axis?
 	 * Useful for top-down games
 	 */
-	private boolean sortByY = false;
+	public boolean sortByY = false;
 
 	/**
 	 * Creates an empty group
 	 */
 	public Group() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -87,6 +87,10 @@ public class Group extends Basic {
 		object.destroy();
 	}
 
+	public ArrayList<Basic> getChildren() {
+		return children;
+	}
+	
 	public void sortByPosY() {
 		try {
 		Collections.sort(children, new Comparator<Basic>() {

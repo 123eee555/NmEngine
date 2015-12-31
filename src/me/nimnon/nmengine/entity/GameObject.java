@@ -19,6 +19,11 @@ public class GameObject extends Basic {
 	 * Position on respective axis
 	 */
 	public double x, y = 0d;
+	
+	/**
+	 * Whether or not the GameObject is motile
+	 */
+	public boolean unmovable = false;
 
 	/**
 	 * Position paralax of this object in relation to cameras
@@ -60,6 +65,8 @@ public class GameObject extends Basic {
 	 */
 	public Point2D.Double drag = new Point2D.Double(1, 1);
 
+	public double elasticity = 0;
+	
 	/**
 	 * Center of the Object
 	 */
@@ -69,11 +76,6 @@ public class GameObject extends Basic {
 	 * Sides that are currently contacting another solid GameObject
 	 */
 	public boolean[] touching = new boolean[4];
-
-	/**
-	 * Whether or not the GameObject is motile
-	 */
-	public boolean movable = true;
 	
 	/**
 	 * Basic object class that handles sprite movement
@@ -142,11 +144,12 @@ public class GameObject extends Basic {
 	}
 
 	public void preUpdate() {
-
+		if(!unmovable)
+			updateMotion();
 	}
 
 	public void postUpdate() {
-		updateMotion();
+		
 		touching[0] = false;
 		touching[1] = false;
 		touching[2] = false;
@@ -202,7 +205,7 @@ public class GameObject extends Basic {
 
 	@Override
 	public void destroy() {
-		this.parent.children.remove(this);
+		this.parent.getChildren().remove(this);
 	}
 
 }

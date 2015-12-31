@@ -13,15 +13,37 @@ public class Physics {
 	/**
 	 * Returns true if objects intersect
 	 * 
-	 * @param object1 Object to move
-	 * @param object2 Static object
+	 * @param object1
+	 *            Object to move
+	 * @param object2
+	 *            Static object
 	 * @return boolean Did the objects collide?
 	 */
 	public static boolean overlaps(Basic object1, Basic object2) {
 		if (object1 instanceof Group) {
-			// TODO handle groups
+			Group group = (Group) object1;
+			GameObject o2 = (GameObject) object2;
+			for (int i = 0; i < group.getChildren().size(); i++) {
+				if (group.getChildren().get(i) instanceof GameObject) {
+					GameObject o1 = (GameObject) group.getChildren().get(i);
+
+					if (overlaps(o1, o2)) {
+						return true;
+					}
+				}
+			}
 		} else if (object2 instanceof Group) {
-			// TODO handle groups
+			Group group = (Group) object2;
+			GameObject o1 = (GameObject) object1;
+			for (int i = 0; i < group.getChildren().size(); i++) {
+				if (group.getChildren().get(i) instanceof GameObject) {
+					GameObject o2 = (GameObject) group.getChildren().get(i);
+
+					if (overlaps(o1, o2)) {
+						return true;
+					}
+				}
+			}
 		} else if (object1 instanceof GameObject && object2 instanceof GameObject) {
 
 			GameObject o1 = (GameObject) object1;
@@ -51,19 +73,19 @@ public class Physics {
 	 * @return boolean
 	 */
 	public static boolean collide(Basic object1, Basic object2) {
-		if(object1 instanceof TileMap) {
-			return collide(((TileMap) object1).tileGroup,object2);
-		} else if(object2 instanceof TileMap) {
-			return collide(object1,((TileMap) object2).tileGroup);
+		if (object1 instanceof TileMap) {
+			return collide(((TileMap) object1).tileGroup, object2);
+		} else if (object2 instanceof TileMap) {
+			return collide(object1, ((TileMap) object2).tileGroup);
 		} else if (object1 instanceof Group) {
 			boolean ret = false;
 			Group group = (Group) object1;
 			ArrayList<Basic> nearest = new ArrayList<>();
 			GameObject o1 = (GameObject) object2;
 			double lastArea = Double.MAX_VALUE;
-			for (int i = 0; i < group.children.size(); i++) {
-				if (group.children.get(i) instanceof GameObject) {
-					GameObject o2 = (GameObject) group.children.get(i);
+			for (int i = 0; i < group.getChildren().size(); i++) {
+				if (group.getChildren().get(i) instanceof GameObject) {
+					GameObject o2 = (GameObject) group.getChildren().get(i);
 
 					if (overlaps(o1, o2)) {
 
@@ -98,9 +120,9 @@ public class Physics {
 			ArrayList<Basic> nearest = new ArrayList<>();
 			GameObject o1 = (GameObject) object1;
 			double lastArea = Double.MAX_VALUE;
-			for (int i = 0; i < group.children.size(); i++) {
-				if (group.children.get(i) instanceof GameObject) {
-					GameObject o2 = (GameObject) group.children.get(i);
+			for (int i = 0; i < group.getChildren().size(); i++) {
+				if (group.getChildren().get(i) instanceof GameObject) {
+					GameObject o2 = (GameObject) group.getChildren().get(i);
 
 					if (overlaps(o1, o2)) {
 
@@ -144,16 +166,37 @@ public class Physics {
 				double deltaY = (Math.abs(top) > Math.abs(bottom)) ? bottom : top;
 				double deltaX = (Math.abs(left) > Math.abs(right)) ? right : left;
 
-				//double timeToX = (o1.velocity.x / Game.ticksPerSecond) / deltaX;
-				//double timeToY = (o1.velocity.y / Game.ticksPerSecond) / deltaY;
+				// double timeToX = (o1.velocity.x / Game.ticksPerSecond) /
+				// deltaX;
+				// double timeToY = (o1.velocity.y / Game.ticksPerSecond) /
+				// deltaY;
 
-				//System.out.println("DeltaY: " + Math.abs(deltaY) + "   DeltaX: " + Math.abs(deltaX));
+				// System.out.println("DeltaY: " + Math.abs(deltaY) + " DeltaX:
+				// " + Math.abs(deltaX));
 
 				if (Math.abs(deltaY) <= Math.abs(deltaX)) {
-					o1.y -= deltaY;
-					o1.x += (o2.velocity.x / Game.ticksPerSecond); // Moving
-																	// platforms
-					o1.velocity.y = (deltaY == top) ? Math.max(o1.velocity.y, 0) : Math.min(o1.velocity.y, 0);
+					if (!o1.unmovable && !o2.unmovable) {
+						o1.y -= deltaY * 0.5;
+						o2.y += deltaY * 0.5;
+					} else {
+						if (o1.unmovable)
+							o2.y += deltaY;
+						if (o2.unmovable)
+							o1.y -= deltaY;
+					}
+
+					if (!o1.unmovable)
+						o1.x += (o2.velocity.x / Game.ticksPerSecond); // Moving
+																		// platforms
+					if (!o1.unmovable) {
+						o1.velocity.y = (deltaY == top) ? Math.max(-o1.velocity.y * o1.elasticity, o1.velocity.y)
+								: Math.min(-o1.velocity.y * o1.elasticity, o1.velocity.y);
+					}
+					if (!o2.unmovable) {
+						o2.velocity.y = (deltaY == top) ? Math.max(-o2.velocity.y * o2.elasticity, o2.velocity.y)
+								: Math.min(-o2.velocity.y * o1.elasticity, o2.velocity.y);
+					}
+
 					if (deltaY == top) {
 						o2.touching[0] = true;
 						o1.touching[1] = true;
@@ -162,8 +205,23 @@ public class Physics {
 						o2.touching[1] = true;
 					}
 				} else {
-					o1.x -= deltaX;
-					o1.velocity.x = (deltaX == left) ? Math.max(o1.velocity.x, 0) : Math.min(o1.velocity.x, 0);
+					if (!o1.unmovable && !o2.unmovable) {
+						o1.x -= deltaX * 0.5;
+						o2.x += deltaX * 0.5;
+					} else {
+						if (o1.unmovable)
+							o2.x += deltaX;
+						if (o2.unmovable)
+							o1.x -= deltaX;
+					}
+
+					if (!o1.unmovable)
+						o1.velocity.x = (deltaX == left) ? Math.max(-o1.velocity.x * o1.elasticity, o1.velocity.x)
+								: Math.min(-o1.velocity.x * o1.elasticity, o1.velocity.x);
+					if (!o2.unmovable)
+						o2.velocity.x = (deltaX == left) ? Math.max(-o2.velocity.x * o2.elasticity, o2.velocity.x)
+								: Math.min(-o2.velocity.x * o2.elasticity, o2.velocity.x);
+
 					if (deltaX == left) {
 						o2.touching[2] = true;
 						o1.touching[3] = true;

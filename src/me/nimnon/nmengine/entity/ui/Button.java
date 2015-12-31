@@ -11,9 +11,9 @@ import me.nimnon.nmengine.entity.GameObject;
 
 public abstract class Button extends GameObject {
 
-	public boolean mouseOn = false;
-	public boolean pressed = false;
-	public boolean justPressed = false;
+	private boolean mouseOn = false;
+	private boolean pressed = false;
+	private boolean justPressed = false;
 
 	public Font font = Game.fonts.boocity;
 	public Color color = Color.getHSBColor((float) Math.random(), 0.5f, 0.9f);
@@ -74,11 +74,11 @@ public abstract class Button extends GameObject {
 	public void update() {
 		super.update();
 		mouseOn = checkForMouse();
-		if (!pressed && Game.mouse.mouse1Down && mouseOn) {
+		if (!pressed && Game.mouse.getMouse1Down() && mouseOn) {
 			justPressed = true;
 
 		}
-		pressed = (Game.mouse.mouse1Down && mouseOn) ? true : false;
+		pressed = (Game.mouse.getMouse1Down() && mouseOn) ? true : false;
 		if (!pressed && justPressed && mouseOn) {
 			onPress();
 			justPressed = false;
@@ -119,6 +119,30 @@ public abstract class Button extends GameObject {
 	}
 
 	/**
+	 * Return's true if the button was just pressed
+	 * @return boolean
+	 */
+	public boolean getJustPressed() {
+		return justPressed;
+	}
+	
+	/**
+	 * Return's true if the button was just pressed
+	 * @return boolean
+	 */
+	public boolean getPressed() {
+		return pressed;
+	}
+	
+	/**
+	 * Return's true if the mouse is over this button
+	 * @return boolean
+	 */
+	public boolean getMouseOver() {
+		return mouseOn;
+	}
+	
+	/**
 	 * Because java does not support defining callback functions through
 	 * parameters you must define the onPress action during instantiation, to
 	 * get around this you must define your fancy fancy onClick logic around
@@ -133,13 +157,11 @@ public abstract class Button extends GameObject {
 	 * @return boolean Is the mouse over the button?
 	 */
 	public boolean checkForMouse() {
-		Boolean hits = false;
-		Camera cam = Game.activeCamera;
-		if ((Game.mouse.x + (cam.x * paralax.x)) > this.x && (Game.mouse.x + (cam.x * paralax.x)) < this.x + this.width - 1) {
-			if ((Game.mouse.y + (cam.y * paralax.y)) > this.y && (Game.mouse.y + (cam.y * paralax.y)) < this.y + this.height - 1) {
-				hits = true;
+		if ((Game.mouse.getxWorld() * paralax.x) > this.x && (Game.mouse.getxWorld() * paralax.x) < this.x + this.width - 1) {
+			if ((Game.mouse.getY() * paralax.y) > this.y && (Game.mouse.getyWorld() * paralax.y) < this.y + this.height - 1) {
+				return true;
 			}
 		}
-		return hits;
+		return false;
 	}
 }

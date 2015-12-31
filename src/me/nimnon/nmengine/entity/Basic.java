@@ -40,6 +40,8 @@ public abstract class Basic {
 	/**
 	 * Destroys object, currently non-functional
 	 */
-	public abstract void destroy();
+	public void destroy() {
+		parent.getChildren().trimToSize();
+	}
 
 }

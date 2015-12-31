@@ -262,7 +262,6 @@ public class Game {
 
 		switchState(state);
 
-		thread.tps = ticksPerSecond;
 		new Thread(thread).start();
 
 	}
