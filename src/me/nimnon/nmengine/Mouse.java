@@ -20,7 +20,7 @@ public class Mouse {
 	private boolean mouse1JustPressed, mouse2JustPressed, mouse3JustPressed = false;
 
 	public Mouse() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public boolean getMouse1JustPressed() {

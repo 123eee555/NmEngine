@@ -1,167 +1,114 @@
 package me.nimnon.nmengine.entity.ui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Rectangle;
-import java.lang.reflect.Method;
+import java.awt.image.BufferedImage;
 
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.core.Camera;
-import me.nimnon.nmengine.entity.GameObject;
+import me.nimnon.nmengine.util.ImageUtils;
 
-public abstract class Button extends GameObject {
+public abstract class Button extends NineSlice {
 
 	private boolean mouseOn = false;
-	private boolean pressed = false;
-	private boolean justPressed = false;
+	private boolean buttonDown = false;
+	
+	private Color color = Color.white;
+	
+	private Color oldColor = Color.white;
+	
+	private BufferedImage textGraphic;
+	
+	private String text = "Button";
 
-	public Font font = Game.fonts.boocity;
-	public Color color = Color.getHSBColor((float) Math.random(), 0.5f, 0.9f);
-	public String text = "";
-
-	public Method onPressMethod;
-
-	/**
-	 * Creates a blank 128x32 button at position
-	 * 
-	 * @param x
-	 *            Position on x axis
-	 * @param y
-	 *            Position on y axis
-	 */
 	public Button(double x, double y) {
 		super(x, y);
-		this.width = 128;
-		this.height = 32;
+
+		this.width = 100;
+		this.height = 20;
 	}
 
-	/**
-	 * Creates a button with specified text and dimension
-	 * 
-	 * @param text
-	 *            Display text
-	 * @param x
-	 *            Position on x axis
-	 * @param y
-	 *            Position on y axis
-	 * @param width
-	 *            Width of object
-	 * @param height
-	 *            Height of object
-	 */
-	public Button(String text, double x, double y, double width, double height) {
+	public Button(double x, double y, double width, double height) {
 		super(x, y, width, height);
-		this.text = text;
+		
 	}
 
-	/**
-	 * Create a button object with this text and dimension
-	 * 
-	 * @param text
-	 *            Display text
-	 * @param rect
-	 *            Dimensions
-	 */
-	public Button(String text, Rectangle rect) {
+	public Button(Rectangle rect) {
 		super(rect);
-		this.text = text;
+		
 	}
 
 	public void create() {
+		super.create();
+		setText(text);
+		
+		setColor(Color.white);
+		
 
 	}
+	
+	public void setText(String text) {
+		this.text = text;
+		textGraphic = Game.fonts.makeString(text, Color.white, new Color(0, 0, 0, 1f));
+	}
+	
+	public String getText() {
+		return this.text;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+		updateColor(color);
+	}
+	
+	public void updateColor(Color color) {
+		for(int i = 0; i < sliceArray.length; i++) {
+			ImageUtils.colorFilter(sliceArray[i], color, oldColor);
+		}
+		oldColor = color;
+	}
+	
+	public Color getColor() {
+		return this.color;
+	}
+	
+	public abstract void onPress();
 
 	public void update() {
-		super.update();
-		mouseOn = checkForMouse();
-		if (!pressed && Game.mouse.getMouse1Down() && mouseOn) {
-			justPressed = true;
-
+		if (Game.mouse.getxWorld() > (int) x - (int) (Game.activeCamera.x * paralax.x)
+				&& Game.mouse.getxWorld() < (int) x - (int) (Game.activeCamera.x * paralax.x) + width
+				&& Game.mouse.getyWorld() > (int) y - (int) (Game.activeCamera.y * paralax.y)
+				&& Game.mouse.getyWorld() < (int) y - (int) (Game.activeCamera.y * paralax.y) + height) {
+			mouseOn = true;
+		} else {
+			mouseOn = false;
+			buttonDown = false;
+			
 		}
-		pressed = (Game.mouse.getMouse1Down() && mouseOn) ? true : false;
-		if (!pressed && justPressed && mouseOn) {
+		
+		
+		if (mouseOn && Game.mouse.getMouse1Down() && Game.mouse.getMouse1JustPressed()) {
+			buttonDown = true;
+			updateColor(this.color.darker());
+		}
+		
+		if(buttonDown && !Game.mouse.getMouse1Down()){
+			buttonDown = false;
 			onPress();
-			justPressed = false;
-
+			updateColor(this.color);
 		}
-		if (!mouseOn) {
-			justPressed = false;
-		}
-
 	}
 
 	public void draw() {
-		float[] hsbColor = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+		super.draw();
+		
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			if (Game.cameras.get(i).isOnScreen(this)) {
 				Camera cam = Game.cameras.get(i);
-				cam.imageGraphics.setColor(color);
-				if (justPressed) {
-					if (hsbColor[2] >= 0.5f)
-						cam.imageGraphics.setColor(
-								Color.getHSBColor(hsbColor[0], hsbColor[1], hsbColor[2]-0.3f)
-						);
-					else
-						cam.imageGraphics.setColor(
-								Color.getHSBColor(hsbColor[0], hsbColor[1], hsbColor[2]+0.3f)
-						);
-
-				}
-				cam.imageGraphics.fillRect((int) (x - (cam.x * paralax.x)), (int) (y - (cam.y * paralax.y)), (int) width - 1, (int) height - 1);
-				if (hsbColor[2] <= 0.5f)
-					cam.imageGraphics.setColor(Color.white);
-				else
-					cam.imageGraphics.setColor(Color.black);
-				cam.imageGraphics.setFont(font.deriveFont(Font.PLAIN, (float) (height / 1.5f)));
-				cam.imageGraphics.drawString(text, (int) (x - (cam.x * paralax.x) + 5), (int) (y - (cam.y * paralax.y) + (float) (height / 1.5f)));
+				
+				cam.imageGraphics.drawImage(textGraphic, (int) ((x+(width/2))-(Game.fonts.getStringWidth(text)/2)) - (int) (Game.cameras.get(i).x * paralax.x),
+						(int) ((y+(height/2))-4) - (int) (Game.cameras.get(i).y * paralax.y), null);
 			}
 		}
-	}
-
-	/**
-	 * Return's true if the button was just pressed
-	 * @return boolean
-	 */
-	public boolean getJustPressed() {
-		return justPressed;
-	}
-	
-	/**
-	 * Return's true if the button was just pressed
-	 * @return boolean
-	 */
-	public boolean getPressed() {
-		return pressed;
-	}
-	
-	/**
-	 * Return's true if the mouse is over this button
-	 * @return boolean
-	 */
-	public boolean getMouseOver() {
-		return mouseOn;
-	}
-	
-	/**
-	 * Because java does not support defining callback functions through
-	 * parameters you must define the onPress action during instantiation, to
-	 * get around this you must define your fancy fancy onClick logic around
-	 * these limits! Sorry!
-	 */
-
-	public abstract void onPress();
-
-	/**
-	 * Returns true if the mouse is over the button
-	 * 
-	 * @return boolean Is the mouse over the button?
-	 */
-	public boolean checkForMouse() {
-		if ((Game.mouse.getxWorld() * paralax.x) > this.x && (Game.mouse.getxWorld() * paralax.x) < this.x + this.width - 1) {
-			if ((Game.mouse.getY() * paralax.y) > this.y && (Game.mouse.getyWorld() * paralax.y) < this.y + this.height - 1) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

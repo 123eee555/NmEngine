@@ -110,8 +110,8 @@ public class Camera {
 	public void update() {
 
 		if (target != null) {
-			x += ((target.getCenter().x - (this.x + (width / (2 * zoom)))) / lerp);
-			y += ((target.getCenter().y - (this.y + (height / (2 * zoom)))) / lerp);
+			x += ((Math.floor(target.getCenter().x) - Math.floor(this.x+(width/zoom)/2))/(Game.ticksPerSecond/lerp));
+			y += ((Math.floor(target.getCenter().y) - Math.floor(this.y+(height/zoom)/2))/(Game.ticksPerSecond/lerp));
 		}
 
 		if (width != lastWidth || height != lastHeight) {
@@ -170,13 +170,13 @@ public class Camera {
 	public boolean isOnScreen(Basic o1) {
 		if (o1 instanceof Sprite) {
 			Sprite object = (Sprite) o1;
-			if ((object.x) + (object.imageWidth - object.offsetX) >= x * object.paralax.x
-					&& (object.x - object.offsetX) <= (x * object.paralax.x) + (width / zoom)) {
-				if ((object.y) + (object.imageHeight - object.offsetY) >= y * object.paralax.y
-						&& (object.y - object.offsetY) <= (y * object.paralax.y) + (height / zoom)) {
-					return true;
-				}
+			if ((((object.x * object.paralax.x) - object.offset.x)+object.getSpriteWidth() > x)
+					&& (((object.x * object.paralax.x) - object.offset.x) < x + (width/zoom))
+					&& (((object.y * object.paralax.y) - object.offset.y)+object.getSpriteHeight() > y)
+					&& (((object.y * object.paralax.y) - object.offset.y) < y + (height/zoom))) {
+				return true;
 			}
+
 		} else if (o1 instanceof GameObject) {
 			GameObject object = (GameObject) o1;
 			if ((object.x) + (object.width) >= x * object.paralax.x && (object.x) <= (x * object.paralax.x) + (width / zoom)) {
@@ -186,8 +186,8 @@ public class Camera {
 			}
 		} else if (o1 instanceof TileMap) {
 			TileMap object = (TileMap) o1;
-			if (object.widthInTiles * object.tileWidth >= x && 0 <= x + (width / zoom)) {
-				if (object.heightInTiles * object.tileHeight >= y && 0 <= y + (height / zoom)) {
+			if (object.getWidthInTiles() * object.getTileWidth() >= x && 0 <= x + (width / zoom)) {
+				if (object.getHeightInTiles() * object.getTileHeight() >= y && 0 <= y + (height / zoom)) {
 					return true;
 				}
 			}

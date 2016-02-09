@@ -99,34 +99,32 @@ public class Group extends Basic {
 					GameObject o1 = (GameObject) o1b;
 					GameObject o2 = (GameObject) o2b;
 					if (o1.y == o2.y) {
-						System.out.println("Returned 0:\n    " + o1b.getClass().getSimpleName() + " and " + o2b.getClass().getSimpleName());
 						return 0;
 					}
 					return o1.y < o2.y ? -1 : 1;
 				}
-				System.out.println("Returned 0!!!@");
 				return 0;
 
 			}
 		});
 		} catch(IndexOutOfBoundsException | NullPointerException e) {
-			//Donchu crash you group u
+			e.printStackTrace();
 		}
 
 	}
 
 	public void preUpdate() {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void postUpdate() {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void create() {
-		// TODO Auto-generated method stub
+		
 
 	}
 

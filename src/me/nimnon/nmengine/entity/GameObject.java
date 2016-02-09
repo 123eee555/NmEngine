@@ -81,7 +81,7 @@ public class GameObject extends Basic {
 	 * Basic object class that handles sprite movement
 	 */
 	public GameObject() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -194,11 +194,11 @@ public class GameObject extends Basic {
 	}
 
 	public void draw() {
+		
 	}
 
 	@Override
 	public void create() {
-		// TODO Auto-generated method stub
 		this.x += new Random().nextDouble() * 0.000001;
 		this.y += new Random().nextDouble() * 0.000001;
 	}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 import me.nimnon.nmengine.core.Camera;
+import me.nimnon.nmengine.core.Font;
 import me.nimnon.nmengine.core.GameThread;
 import me.nimnon.nmengine.core.KeyboardListener;
 import me.nimnon.nmengine.core.MousePadListener;
@@ -53,10 +54,10 @@ public class Game {
 	public static Mouse mouse = new Mouse();
 
 	/**
-	 * Class that handles the embedding of fonts
+	 * Text writing utility class
 	 */
-	public static Fonts fonts = new Fonts();
-
+	public static Font fonts = new Font();
+	
 	/**
 	 * Current focused camera
 	 */
@@ -73,12 +74,7 @@ public class Game {
 	public static Color backgroundColor = Color.white;
 
 	/**
-	 * TimeSince last update
-	 */
-	public static double elapsedTime = 0;
-
-	/**
-	 * Is the debugger enabled? NOT YET IMPLEMENTED
+	 * Is debug output enabled?
 	 */
 	public static boolean debug = false;
 
@@ -87,6 +83,16 @@ public class Game {
 	 */
 	public static State currentState;
 
+	/**
+	 * Game width
+	 */
+	public static int gameWidth;
+	
+	/**
+	 * Game height
+	 */
+	public static int gameHeight;
+	
 	/**
 	 * Creates a new Game class, it is advised you only create one of these,
 	 * else weird things happen.
@@ -226,7 +232,11 @@ public class Game {
 	private void createGame(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor) {
 		if (state == null)
 			state = new State();
+		
 		ticksPerSecond = tps;
+		
+		gameWidth = (int) (width/zoom);
+		gameHeight = (int) (height/zoom);
 
 		mouseListener = new MousePadListener();
 		keyListener = new KeyboardListener();

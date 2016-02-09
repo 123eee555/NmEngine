@@ -9,7 +9,7 @@ import me.nimnon.nmengine.Game;
 public class MousePadListener implements MouseListener, MouseMotionListener {
 
 	public MousePadListener() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -92,7 +92,7 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -101,7 +101,7 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
