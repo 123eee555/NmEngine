@@ -74,9 +74,9 @@ public class Physics {
 	 */
 	public static boolean collide(Basic object1, Basic object2) {
 		if (object1 instanceof TileMap) {
-			return collide(((TileMap) object1).tileGroup, object2);
+			return collide(((TileMap) object1).getTileGroup(), object2);
 		} else if (object2 instanceof TileMap) {
-			return collide(object1, ((TileMap) object2).tileGroup);
+			return collide(object1, ((TileMap) object2).getTileGroup());
 		} else if (object1 instanceof Group) {
 			boolean ret = false;
 			Group group = (Group) object1;

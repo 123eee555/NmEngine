@@ -34,51 +34,41 @@ public class GameThread extends JPanel implements Runnable {
 	 * Method that starts the game loop.
 	 */
 	private void gameLoop() {
-		
-		int tps = Game.ticksPerSecond;
-		
-		long now = System.nanoTime();
-		long last = System.nanoTime();
+		long lastTime = System.nanoTime();
+		double ns = 1000000000 / Game.ticksPerSecond;
+		double delta = 0;
 		long timer = System.currentTimeMillis();
-
 		int updates = 0;
 		int frames = 0;
-
-		long ns = 1000000000;
-		long delta = 0;
-
-		while (running) {
-			now = System.nanoTime();
-			delta += now - last;
-			if (delta > ns / (tps)) {
-				update();
-				
-				updates++;
-				frames++;
-				Game.elapsedTime = delta / 1000000000d;
-
-				delta -= ns / (tps);
-			}
-			if (Game.currentState != null) {
-				
-				repaint();
-			}
-			last = now;
+		while(running){
 			
-			try {
-				Thread.sleep((long)((1000/tps)*0.6));
-			} catch (InterruptedException e) {
-				
-				e.printStackTrace();
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			while(delta >= 1){
+				update();
+				updates++;
+				delta--;
+				ns = 1000000000 / Game.ticksPerSecond;
 			}
-
-			if (System.currentTimeMillis() - timer > 1000) {
+			repaint();
+			frames++;
+					
+			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				if(Game.debug)
-					System.out.println("FPS: " + frames + " TICKS: " + updates);
+				System.out.println("FPS: " + frames + " TICKS: " + updates);
 				frames = 0;
 				updates = 0;
 			}
+			
+			try{ 
+				if((now + ns - System.nanoTime())/1000000 > 0) {
+					Thread.sleep((long) ((now + ns - System.nanoTime())/1000000));
+				}
+			} catch( InterruptedException e ) {
+				
+			}
+			
 		}
 	}
 
@@ -87,15 +77,13 @@ public class GameThread extends JPanel implements Runnable {
 	 * turn updates everything else.
 	 */
 	private void update() {
-		
+
 		Game.currentState.preUpdate();
 		Game.currentState.update();
 		Game.currentState.postUpdate();
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			Game.activeCamera.update();
 		}
-		
-
 
 	}
 

@@ -2,328 +2,237 @@ package me.nimnon.nmengine.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-
-import javax.imageio.ImageIO;
 
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.core.Animation;
 import me.nimnon.nmengine.core.Camera;
+import me.nimnon.nmengine.util.ImageUtils;
 
-/**
- * Game object with a graphic, graphics must be loaded or created with
- * loadGraphic() or makeGraphic().
- * 
- * @author Nimnon
- *
- */
 public class Sprite extends GameObject {
 
-	/**
-	 * If true the objects bounding box is drawn
-	 */
-	public boolean drawDebug = false;
+	// Fields
+	private BufferedImage graphic;
+	private BufferedImage drawClip;
 
-	/**
-	 * Image data of the object.
-	 */
-	private BufferedImage image;
+	private boolean animated;
+	private ArrayList<Animation> anims = new ArrayList<>();
+	private int animIndex = 0;
+	private Animation currentAnimation;
+	private double animTime = 0;
+	private int sliceWidth;
+	private int sliceHeight;
+	
+	public boolean flipX;
+	private boolean lastFlipX = false;
+	public boolean flipY;
+	private boolean lastFlipY = false;
+	
+	public Point offset = new Point(0, 0);
 
-	/**
-	 * Object color, used in debug drawing
-	 */
-	public Color color = Color.getHSBColor(new Random().nextFloat(), 0.6f, 0.9f);
-
-	/**
-	 * List of animations loaded by the sprite
-	 */
-	public ArrayList<Animation> anims = new ArrayList<Animation>();
-
-	/**
-	 * Current animation
-	 */
-	public Animation curAnim = new Animation();
-
-	/**
-	 * Delay between frame change
-	 */
-	private double frameTimer;
-
-	/**
-	 * Current frame
-	 */
-	public int frame = 0;
-
-	/**
-	 * used by the animation logic
-	 */
-	public int index = 0;
-
-	/**
-	 * Width and Height of the image
-	 */
-	public int imageWidth, imageHeight;
-
-	/**
-	 * Flip the graphic on the respective axis?
-	 */
-	public boolean flipX, flipY = false;
-
-	/**
-	 * Offset the sprite by this number of pixels on specified axis
-	 */
-	public int offsetX, offsetY = 0;
-
-	/**
-	 * Creates basic instance of a Sprite, uses the default graphic
-	 */
+	// Constructors
 	public Sprite() {
 		super();
-		// makeGraphic((int)width,(int)height,color);
-		setGraphic("default.png");
+		makeGraphic(12, 12, Color.orange);
 	}
 
-	/**
-	 * Creates basic instance of a Sprite at position x and y, uses the default
-	 * graphic
-	 * 
-	 * @param x
-	 *            Position on x axis
-	 * @param y
-	 *            Position on y axis
-	 */
 	public Sprite(double x, double y) {
 		super(x, y);
-		setGraphic("../NmEngine/assets/default.png");
+		makeGraphic(12, 12, Color.orange);
 	}
 
-	/**
-	 * Creates basic instance of a Sprite at position x and y, creates graphic
-	 * to size using a random color
-	 * 
-	 * @param x
-	 *            Position on x axis
-	 * @param y
-	 *            Position on y axis
-	 * @param width
-	 *            Width of object
-	 * @param height
-	 *            Height of object
-	 */
 	public Sprite(double x, double y, double width, double height) {
 		super(x, y, width, height);
-		makeGraphic();
+		makeGraphic((int) width, (int) width, Color.orange);
 	}
 
-	/**
-	 * Creates basic instance of a Sprite with the dimensions of the supplied
-	 * Rect, creates graphic to size using a random color
-	 * 
-	 * @param rect
-	 *            Dimensions to use
-	 */
 	public Sprite(Rectangle rect) {
 		super(rect);
-		makeGraphic((int) rect.width, (int) rect.height, color);
+		makeGraphic((int) rect.x, (int) rect.y, Color.orange);
 	}
 
-	/**
-	 * Creates a rectangle for a graphic
-	 * 
-	 * @param width
-	 *            Width of graphic
-	 * @param height
-	 *            Height of graphic
-	 * @param color
-	 *            Graphic color
-	 */
+	// Graphic Methods
 	public void makeGraphic(int width, int height, Color color) {
-		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = image.createGraphics();
-		g2d.setColor(color);
-		g2d.fillRect(0, 0, width, height);
+		this.animated = false;
 		this.width = width;
 		this.height = height;
-		imageWidth = (int) width;
-		imageHeight = (int) height;
-	}
+		this.graphic = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.drawClip = graphic;
+		Graphics2D g2d = this.graphic.createGraphics();
 
-	/**
-	 * Creates graphic to width and height automatically
-	 * 
-	 * @param color
-	 *            Graphic color
-	 */
-	public void makeGraphic(Color color) {
-		image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(color);
-		g2d.fillRect(0, 0, (int) width, (int) height);
-		imageWidth = (int) width;
-		imageHeight = (int) height;
+		g2d.fillRect(0, 0, width, height);
+		g2d.dispose();
 	}
 
-	/**
-	 * Creates graphic to width and height automatically with a random color
-	 */
-	public void makeGraphic() {
-		image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = image.createGraphics();
-		g2d.setColor(color);
-		g2d.fillRect(0, 0, (int) width, (int) height);
-		imageWidth = (int) width;
-		imageHeight = (int) height;
-	}
+	public void loadGraphic(String path) {
+		this.animated = false;
 
-	/**
-	 * Sets graphic to image at path, image must be located in the assets folder
-	 * 
-	 * @param path
-	 *            - Path to image
-	 * @param animated
-	 *            - Is the object animated (Is it a spritesheet?)?
-	 * @param width
-	 *            - Width of sprite (Used for splitting the spritesheet)
-	 * @param height
-	 *            - Height of sprite (Used for splitting the spritesheet)
-	 */
-	public void setGraphic(String path, boolean animated, int width, int height) {
-		File img = new File(path);
 		try {
-			image = ImageIO.read(img);
-			this.width = width;
-			this.height = height;
-			imageWidth = width;
-			imageHeight = height;
+			this.graphic = ImageUtils.getImage(path);
+			this.drawClip = graphic;
+			this.width = graphic.getWidth();
+			this.height = graphic.getHeight();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			// Fall back to generated sprite..
+			makeGraphic(12, 12, Color.orange);
 		}
+
+	}
+	
+	public void loadGraphic(BufferedImage image) {
+		this.animated = false;
+
+		this.graphic = image;
+		this.drawClip = graphic;
+		this.width = graphic.getWidth();
+		this.height = graphic.getHeight();
+		
+
 	}
 
-	/**
-	 * Sets graphic to image at path, image must be located in the assets folder
-	 * 
-	 * @param path
-	 *            - Path to image
-	 */
-	public void setGraphic(String path) {
-		File img = new File(path);
+	public void loadGraphic(String path, int spriteWidth, int spriteHeight, boolean animate) {
+		this.animated = false;
+
 		try {
-			image = ImageIO.read(img);
-			this.width = image.getWidth();
-			this.height = image.getHeight();
-			imageWidth = image.getWidth();
-			imageHeight = image.getHeight();
+			this.graphic = ImageUtils.getImage(path);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			// Fall back to generated sprite..
+			makeGraphic(12, 12, Color.orange);
+		} finally {
+			this.animated = animate;
+			this.width = spriteWidth;
+			this.height = spriteHeight;
+			this.sliceWidth = spriteWidth;
+			this.sliceHeight = spriteHeight;
+			this.drawClip = ImageUtils.getSlice(0, graphic, sliceWidth, sliceHeight);
 		}
+
+	}
+	
+	public void loadGraphic(BufferedImage image, int spriteWidth, int spriteHeight, boolean animate) {
+		this.animated = false;
+
+
+		this.graphic = image;
+		this.animated = animate;
+		this.width = spriteWidth;
+		this.height = spriteHeight;
+		this.sliceWidth = spriteWidth;
+		this.sliceHeight = spriteHeight;
+		this.drawClip = ImageUtils.getSlice(0, graphic, sliceWidth, sliceHeight);
+
+	}
+	
+	public int getSpriteHeight() {
+		return drawClip.getHeight();
+	}
+	
+	public int getSpriteWidth() {
+		return drawClip.getWidth();
 	}
 
-	/**
-	 * Add new animation
-	 * 
-	 * @param name
-	 *            Animation name
-	 * @param frames
-	 *            Array of frames
-	 * @param framerate
-	 *            Framerate in Frames per second
-	 * @param loops
-	 *            Does the animation loop?
-	 */
-	public void addAnim(String name, int[] frames, int framerate, boolean loops) {
+	// Animation
+	public void addAnimation(String name, int[] frames, double framerate, boolean loops) {
 		anims.add(new Animation(name, framerate, frames, loops));
 	}
 
-	/**
-	 * Play animation
-	 * 
-	 * @param name
-	 *            Animation to play
-	 */
-	public void playAnim(String name) {
-		if (name != curAnim.name) {
-			for (int i = 0; i < anims.size(); i++) {
-				if (anims.get(i).name == name) {
-					curAnim = anims.get(i);
-					index = curAnim.frames[0];
+	public void playAnimation(String name) {
+		for (int i = 0; i < this.anims.size(); i++) {
+			if (this.anims.get(i).name.equals(name)) {
+				if (this.currentAnimation != this.anims.get(i)) {
+					this.currentAnimation = this.anims.get(i);
+					this.animIndex = this.currentAnimation.frames[0];
+				} else if(this.currentAnimation.loops == false && this.animIndex == currentAnimation.frames.length){
+					this.currentAnimation = this.anims.get(i);
+					this.animIndex = this.currentAnimation.frames[0];
 				}
+			} else {
+				System.out.println("No Animation found for name: "+name);
+			}
+		}
+	}
+	
+	public int getCurrentFrame() {
+		return animIndex;
+	}
+	
+	public Animation getCurrentAnimation() {
+		return currentAnimation;
+	}
+
+	public void updateAnimation() {
+		int frame = animIndex;
+		animTime += 1d/Game.ticksPerSecond;
+		if (animTime > this.currentAnimation.delay) {
+			
+			if(this.currentAnimation.loops)
+				this.animIndex = (this.animIndex+1) % this.currentAnimation.frames.length;
+			else if(this.animIndex < this.currentAnimation.frames.length)
+				this.animIndex++;
+			this.animTime = 0;
+		}
+		if(frame != animIndex) {
+			drawClip = ImageUtils.getSlice(this.currentAnimation.frames[animIndex], graphic, sliceWidth, sliceHeight);
+			if(flipX) {
+				drawClip = ImageUtils.flipX(drawClip);
+			}
+			if(flipY) {
+				drawClip = ImageUtils.flipY(drawClip);
 			}
 		}
 	}
 
-	/**
-	 * Draw sprite to cameras it appears on
-	 */
-	public void draw() {
-		for (int i = 0; i < Game.cameras.size(); i++) {
-			if (Game.cameras.get(i).isOnScreen(this)) {
-				Camera cam = Game.cameras.get(i);
-				if (imageWidth != 0 && imageHeight != 0 && image.getWidth() != 0 && image.getHeight() != 0) {
-					BufferedImage image2 = image.getSubimage((int) ((index * imageWidth) % image.getWidth()),
-							(int) (Math.floor(index / (image.getWidth() / imageWidth)) * imageHeight), (int) imageWidth, (int) imageHeight);
-
-					if (flipX) {
-						AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-						tx.translate(-imageWidth, 0);
-						AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-						image2 = op.filter(image2, null);
-					}
-					if (flipY) {
-						AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
-						tx.translate(0, -imageHeight);
-						AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-						image2 = op.filter(image2, null);
-					}
-
-					cam.imageGraphics.drawImage(image2, (int) x - (int) (Game.cameras.get(i).x * paralax.x) - (int) offsetX,
-							(int) y - (int) (Game.cameras.get(i).y * paralax.y) - (int) offsetY, null);
-
-					if (drawDebug) {
-						cam.imageGraphics.setColor(color);
-						cam.imageGraphics.drawRect((int) x - (int) (Game.cameras.get(i).x * paralax.x), (int) y - (int) (Game.cameras.get(i).y * paralax.y),
-								(int) (width-1), (int) (height-1));
-					}
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Called every frame
-	 */
+	// Updating and Drawing
 	public void update() {
 		super.update();
-		updateAnim();
+		
+		if (this.animated && this.currentAnimation != null) {
+			updateAnimation();
+		}
+		
+
 	}
 
-	/**
-	 * Updates the animation if one exists, called every tick
-	 */
-	public void updateAnim() {
-		if (curAnim != null) {
-			frameTimer += Game.elapsedTime;
-			while (frameTimer > curAnim.delay && curAnim.delay != 0) {
-				frameTimer -= curAnim.delay;
-				if (frame == curAnim.frames.length - 1) {
-					if (curAnim.loops) {
-						frame = 0;
-					}
-				} else
-					frame++;
-				index = curAnim.frames[frame];
+	public void draw() {
+		super.draw();
+		for (int i = 0; i < Game.cameras.size(); i++) {
+			Camera cam = Game.cameras.get(i);
+			if (cam.isOnScreen(this)) {
+				
+				if(flipX != lastFlipX) {
+					drawClip = ImageUtils.flipX(drawClip);
+				}
+				if(flipY != lastFlipY) {
+					drawClip = ImageUtils.flipY(drawClip);
+				}
+				lastFlipX = flipX;
+				lastFlipY = flipY;
+				
+				cam.imageGraphics.drawImage(drawClip, (int) (((x*paralax.x)-offset.y)-cam.x), (int) (((y*paralax.y)-offset.y)-cam.y), null);
 			}
+
 		}
+
+	}
+	
+	public void destroy() {
+		super.destroy();
+		graphic.flush();
+		drawClip.flush();
+		
+		
+		animated = false;
+		currentAnimation = null;
+		anims.clear();
+		anims.trimToSize();
+		
 	}
 
 }
