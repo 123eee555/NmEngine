@@ -110,8 +110,8 @@ public class Camera {
 	public void update() {
 
 		if (target != null) {
-			x += ((Math.floor(target.getCenter().x) - Math.floor(this.x+(width/zoom)/2))/(Game.ticksPerSecond/lerp));
-			y += ((Math.floor(target.getCenter().y) - Math.floor(this.y+(height/zoom)/2))/(Game.ticksPerSecond/lerp));
+			x -= ((int)((x)+((width/zoom)/2))-(int)target.getCenter().x)/(Game.ticksPerSecond/lerp);
+			y -= ((int)((y)+((height/zoom)/2))-(int)target.getCenter().y)/(Game.ticksPerSecond/lerp);
 		}
 
 		if (width != lastWidth || height != lastHeight) {

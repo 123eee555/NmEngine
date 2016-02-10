@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import me.nimnon.nmengine.Game;
+import me.nimnon.nmengine.core.Camera;
 import me.nimnon.nmengine.util.ImageUtils;
 
 public class NineSlice extends UIBasic {
@@ -14,8 +15,9 @@ public class NineSlice extends UIBasic {
 	private int sliceHeight = 3;
 
 	protected BufferedImage[] sliceArray = new BufferedImage[9];
-	
+
 	BufferedImage graphic;
+	Graphics2D g2d;
 
 	public NineSlice(double x, double y) {
 		this.width = 10;
@@ -31,7 +33,7 @@ public class NineSlice extends UIBasic {
 	public NineSlice(Rectangle rect) {
 		super(rect);
 	}
-	
+
 	public void createNineSliceFromImage(String path) {
 		try {
 			BufferedImage source = ImageUtils.getImage(path);
@@ -52,36 +54,48 @@ public class NineSlice extends UIBasic {
 	public void create() {
 		super.create();
 		createNineSliceFromImage("/me/nimnon/nmengine/assets/9slice.png");
+		
 	}
 
 	public void draw() {
-		Graphics2D g2d = Game.activeCamera.imageGraphics;
+		for (int i = 0; i < Game.cameras.size(); i++) {
+			Camera cam = Game.cameras.get(i);
+			if (cam.isOnScreen(this)) {
+				
+				graphic = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
+				g2d = graphic.createGraphics();
+				
+				for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
+					for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
+						g2d.drawImage(sliceArray[4], (int) (dx * sliceWidth), (int) (dy * sliceHeight), null);
+					}
+				}
 
-		for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
-			for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
-				g2d.drawImage(sliceArray[4], (int) x + (dx * sliceWidth), (int) y + (dy * sliceHeight), null);
+				for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
+					g2d.drawImage(sliceArray[1], (int) (dx * sliceWidth), 0, null);
+				}
+
+				for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
+					g2d.drawImage(sliceArray[1], (int) (dx * sliceWidth), (int) (height) - sliceWidth, null);
+				}
+
+				for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
+					g2d.drawImage(sliceArray[3], 0, (int) (dy * sliceHeight), null);
+				}
+
+				for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
+					g2d.drawImage(sliceArray[5], (int) (width) - sliceWidth, (int) (dy * sliceHeight), null);
+				}
+
+				g2d.drawImage(sliceArray[0], (int) 0, (int) 0, null);
+				g2d.drawImage(sliceArray[2], (int) (0 + width) - sliceWidth, (int) 0, null);
+				g2d.drawImage(sliceArray[6], (int) 0, (int) (0 + height) - sliceWidth, null);
+				g2d.drawImage(sliceArray[8], (int) (0 + width) - sliceWidth, (int) (0 + height) - sliceWidth, null);
+
+				Game.activeCamera.imageGraphics.drawImage(graphic, ((int) (x) - (int) (Game.activeCamera.x)),
+						((int) (y) - (int) (Game.activeCamera.y)), null);
 			}
 		}
-		
-		for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
-			g2d.drawImage(sliceArray[1], (int) x + (dx * sliceWidth), (int) y, null);
-		}
-		
-		for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
-			g2d.drawImage(sliceArray[1], (int) x + (dx * sliceWidth), (int) (y + height) - sliceWidth, null);
-		}
-		
-		for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
-			g2d.drawImage(sliceArray[3], (int) x, (int) y + (dy * sliceHeight), null);
-		}
-		
-		for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {
-			g2d.drawImage(sliceArray[5], (int) (x + width) - sliceWidth, (int) y + (dy * sliceHeight), null);
-		}
-		
-		g2d.drawImage(sliceArray[0], (int) x, (int) y, null);
-		g2d.drawImage(sliceArray[2], (int) (x + width) - sliceWidth, (int) y, null);
-		g2d.drawImage(sliceArray[6], (int) x, (int) (y + height) - sliceWidth, null);
-		g2d.drawImage(sliceArray[8], (int) (x + width) - sliceWidth, (int) (y + height) - sliceWidth, null);
+
 	}
 }

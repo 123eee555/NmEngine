@@ -199,13 +199,17 @@ public class GameObject extends Basic {
 
 	@Override
 	public void create() {
-		this.x += new Random().nextDouble() * 0.000001;
-		this.y += new Random().nextDouble() * 0.000001;
+		this.x = (int)x;
+		this.y = (int)y;
 	}
 
 	@Override
 	public void destroy() {
 		this.parent.getChildren().remove(this);
+	}
+	
+	public void onTouch(GameObject touched) {
+		
 	}
 
 }
