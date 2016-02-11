@@ -27,6 +27,7 @@ public class Sprite extends GameObject {
 	private int sliceWidth;
 	private int sliceHeight;
 
+	public boolean scales = true;
 	public boolean flipX;
 	private boolean lastFlipX = false;
 	public boolean flipY;
@@ -129,11 +130,17 @@ public class Sprite extends GameObject {
 	}
 
 	public int getSpriteHeight() {
-		return drawClip.getHeight();
+		if(!scales)
+			return drawClip.getHeight();
+		else
+			return (int) width;
 	}
 
 	public int getSpriteWidth() {
-		return drawClip.getWidth();
+		if(!scales)
+			return drawClip.getWidth();
+		else
+			return (int) width;
 	}
 
 	// Animation
@@ -219,7 +226,10 @@ public class Sprite extends GameObject {
 				
 				cam.imageGraphics.drawImage(drawClip,
 				((int)((x-offset.x) * paralax.x) - (int)(cam.x)),
-				((int)((y-offset.y) * paralax.y) - (int)(cam.y)), null);
+				((int)((y-offset.y) * paralax.y) - (int)(cam.y)),
+				(int)width,
+				(int)height,
+				null);
 				
 			}
 

@@ -76,7 +76,7 @@ public class NineSlice extends UIBasic {
 				}
 
 				for (int dx = 1; dx <= (int) (width - 1) / sliceWidth - 1; dx++) {
-					g2d.drawImage(sliceArray[1], (int) (dx * sliceWidth), (int) (height) - sliceWidth, null);
+					g2d.drawImage(sliceArray[7], (int) (dx * sliceWidth), (int) (height) - sliceWidth, null);
 				}
 
 				for (int dy = 1; dy <= (int) (height - 1) / sliceHeight - 1; dy++) {

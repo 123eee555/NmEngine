@@ -77,6 +77,20 @@ public class Physics {
 			return collide(((TileMap) object1).getTileGroup(), object2);
 		} else if (object2 instanceof TileMap) {
 			return collide(object1, ((TileMap) object2).getTileGroup());
+		} else if (object1 instanceof Group && object2 instanceof Group) {
+			boolean ret = false;
+			Group group1 = (Group) object1;
+			Group group2 = (Group) object2;
+			
+			for(int i = 0; i < group1.getChildren().size(); i++) {
+				if(ret == false && collide(group1.getChildren().get(i),group2)) {
+					ret = true;
+				} else {
+					collide(group1.getChildren().get(i),group2);
+				}
+				
+			}
+			return ret;
 		} else if (object1 instanceof Group) {
 			boolean ret = false;
 			Group group = (Group) object1;
