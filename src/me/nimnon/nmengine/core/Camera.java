@@ -1,6 +1,7 @@
 package me.nimnon.nmengine.core;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 
 import me.nimnon.nmengine.Game;
@@ -56,12 +57,19 @@ public class Camera {
 	 * Follow target
 	 */
 	private GameObject target;
+	
+	private Double offset = new Double(0, 0);
 
 	/**
 	 * Follow smoothness
 	 */
 	private double lerp = 1.0d;
 
+	private double shakeX = 0;
+	
+	private double shakeY = 0;
+	
+	private double shakeDecay = 1;
 	/**
 	 * Image drawn to the main JPanel
 	 */
@@ -110,9 +118,15 @@ public class Camera {
 	public void update() {
 
 		if (target != null) {
-			x -= ((int)((x)+((width/zoom)/2))-(int)target.getCenter().x)/(Game.ticksPerSecond/lerp);
-			y -= ((int)((y)+((height/zoom)/2))-(int)target.getCenter().y)/(Game.ticksPerSecond/lerp);
+			x -= ((int)((x)+((width/zoom)/2))-(int)target.getCenter().x - offset.x)/(Game.ticksPerSecond/lerp);
+			y -= ((int)((y)+((height/zoom)/2))-(int)target.getCenter().y - offset.y)/(Game.ticksPerSecond/lerp);
 		}
+		
+		x += Math.random()*(shakeX*2)-(shakeX);
+		y += Math.random()*(shakeY*2)-(shakeY);
+		
+		shakeX = Math.max(0, shakeX - shakeDecay);
+		shakeY = Math.max(0, shakeY - shakeDecay);
 
 		if (width != lastWidth || height != lastHeight) {
 			imageData = new BufferedImage((int) (width / zoom), (int) (height / zoom), BufferedImage.TYPE_INT_ARGB);
@@ -158,6 +172,16 @@ public class Camera {
 	public void stopFolowing() {
 		target = null;
 		lerp = 1;
+	}
+	
+	public void setOffset(double x, double y) {
+		offset.setLocation(x, y);
+	}
+	
+	public void shakeScreen(int xShake, int yShake, int decayRate) {
+		shakeX = xShake;
+		shakeY = yShake;
+		shakeDecay = decayRate;
 	}
 
 	/**
