@@ -37,6 +37,10 @@ public class Camera {
 	 * World Y
 	 */
 	public double y = 0d;
+	
+	public double offsetX = 0d;
+	
+	public double offsetY = 0d;
 
 	/**
 	 * Camera screen-space width in pixels, width in worldspace is width/zoom
@@ -122,8 +126,8 @@ public class Camera {
 			y -= ((int)((y)+((height/zoom)/2))-(int)target.getCenter().y - offset.y)/(Game.ticksPerSecond/lerp);
 		}
 		
-		x += Math.random()*(shakeX*2)-(shakeX);
-		y += Math.random()*(shakeY*2)-(shakeY);
+		offsetX = Math.random()*(shakeX*2)-(shakeX);
+		offsetY = Math.random()*(shakeY*2)-(shakeY);
 		
 		shakeX = Math.max(0, shakeX - shakeDecay);
 		shakeY = Math.max(0, shakeY - shakeDecay);
