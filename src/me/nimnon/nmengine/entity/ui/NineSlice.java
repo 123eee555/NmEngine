@@ -92,8 +92,8 @@ public class NineSlice extends UIBasic {
 				g2d.drawImage(sliceArray[6], (int) 0, (int) (0 + height) - sliceWidth, null);
 				g2d.drawImage(sliceArray[8], (int) (0 + width) - sliceWidth, (int) (0 + height) - sliceWidth, null);
 
-				Game.activeCamera.imageGraphics.drawImage(graphic, ((int) (x) - (int) (Game.activeCamera.x)),
-						((int) (y) - (int) (Game.activeCamera.y)), null);
+				Game.activeCamera.imageGraphics.drawImage(graphic, ((int) (x) - (int) (cam.x - cam.offsetX)),
+						((int) (y) - (int) (cam.y - cam.offsetY)), null);
 			}
 		}
 

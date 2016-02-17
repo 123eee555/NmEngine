@@ -39,7 +39,7 @@ public abstract class Button extends NineSlice {
 	}
 
 	public void create() {
-		super.create();
+		createNineSliceFromImage("/me/nimnon/nmengine/assets/buttonSlice.png");
 		setText(text);
 		
 		setColor(Color.white);
@@ -49,7 +49,7 @@ public abstract class Button extends NineSlice {
 	
 	public void setText(String text) {
 		this.text = text;
-		textGraphic = Game.fonts.makeString(text, Color.white, new Color(0, 0, 0, 1f));
+		textGraphic = Game.fonts.makeString(text, Color.white, new Color(0, 0, 0, 0f));
 	}
 	
 	public String getText() {
