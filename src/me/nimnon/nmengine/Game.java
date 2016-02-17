@@ -1,7 +1,10 @@
 package me.nimnon.nmengine;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -26,13 +29,13 @@ public class Game {
 	/**
 	 * Actual window
 	 */
-	private JFrame window;
+	private static JFrame window;
 
 	/**
 	 * GameThread component housed in the window, controls update and render
 	 * loop
 	 */
-	private GameThread thread;
+	private static GameThread thread;
 
 	/**
 	 * Keyboard Listener that takes keyboard inputs
@@ -92,6 +95,9 @@ public class Game {
 	 * Game height
 	 */
 	public static int gameHeight;
+	
+	private static Cursor blankCursor;
+	private static Cursor systemCursor;
 	
 	/**
 	 * Creates a new Game class, it is advised you only create one of these,
@@ -267,6 +273,9 @@ public class Game {
 		thread.addMouseMotionListener(mouseListener);
 		thread.addKeyListener(keyListener);
 
+		Game.blankCursor = window.getToolkit().createCustomCursor( new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null );
+		Game.systemCursor = Cursor.getDefaultCursor();
+		
 		while (!thread.hasFocus())
 			thread.grabFocus();
 
@@ -289,6 +298,7 @@ public class Game {
 		if (currentState != null)
 			currentState.destroy();
 		currentState = state;
+		showCursor();
 		state.create();
 
 	}
@@ -319,5 +329,13 @@ public class Game {
 			return true;
 		else
 			return false;
+	}
+	
+	public static void hideCursor() {
+		window.setCursor(blankCursor);
+	}
+	
+	public static void showCursor() {
+		window.setCursor(systemCursor);
 	}
 }
