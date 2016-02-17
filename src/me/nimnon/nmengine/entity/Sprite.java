@@ -18,16 +18,19 @@ public class Sprite extends GameObject {
 	// Fields
 	private BufferedImage graphic;
 	private BufferedImage drawClip;
+	
+	private Color color = Color.getHSBColor((float)Math.random(), 0.8f, 1f);
 
 	private boolean animated;
 	private ArrayList<Animation> anims = new ArrayList<>();
 	private int animIndex = 0;
+	private int animFrame = 0;
 	private Animation currentAnimation;
 	private double animTime = 0;
 	private int sliceWidth;
 	private int sliceHeight;
 
-	public boolean scales = true;
+	public boolean scales = false;
 	public boolean flipX;
 	private boolean lastFlipX = false;
 	public boolean flipY;
@@ -38,22 +41,22 @@ public class Sprite extends GameObject {
 	// Constructors
 	public Sprite() {
 		super();
-		makeGraphic(12, 12, Color.orange);
+		makeGraphic(12, 12, color);
 	}
 
 	public Sprite(double x, double y) {
 		super(x, y);
-		makeGraphic(12, 12, Color.orange);
+		makeGraphic(12, 12, color);
 	}
 
 	public Sprite(double x, double y, double width, double height) {
 		super(x, y, width, height);
-		makeGraphic((int) width, (int) width, Color.orange);
+		makeGraphic((int) width, (int) width, color);
 	}
 
 	public Sprite(Rectangle rect) {
 		super(rect);
-		makeGraphic((int) rect.x, (int) rect.y, Color.orange);
+		makeGraphic((int) rect.x, (int) rect.y, color);
 	}
 
 	// Graphic Methods
@@ -81,7 +84,7 @@ public class Sprite extends GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 			// Fall back to generated sprite..
-			makeGraphic(12, 12, Color.orange);
+			makeGraphic(12, 12, color);
 		}
 
 	}
@@ -104,7 +107,7 @@ public class Sprite extends GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 			// Fall back to generated sprite..
-			makeGraphic(12, 12, Color.orange);
+			makeGraphic(12, 12, color);
 		} finally {
 			this.animated = animate;
 			this.width = spriteWidth;
@@ -129,15 +132,24 @@ public class Sprite extends GameObject {
 
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+		makeGraphic((int) graphic.getWidth(), (int) graphic.getHeight(), color);
+	}
+
 	public int getSpriteHeight() {
-		if(!scales)
+		if (!scales)
 			return drawClip.getHeight();
 		else
 			return (int) width;
 	}
 
 	public int getSpriteWidth() {
-		if(!scales)
+		if (!scales)
 			return drawClip.getWidth();
 		else
 			return (int) width;
@@ -154,12 +166,9 @@ public class Sprite extends GameObject {
 				if (this.currentAnimation != this.anims.get(i)) {
 					this.currentAnimation = this.anims.get(i);
 					this.animIndex = this.currentAnimation.frames[0];
-				} else if (this.currentAnimation.loops == false && this.animIndex == currentAnimation.frames.length) {
-					this.currentAnimation = this.anims.get(i);
-					this.animIndex = this.currentAnimation.frames[0];
+					this.animFrame = 0;
+					updateClip();
 				}
-			} else {
-				System.out.println("No Animation found for name: " + name);
 			}
 		}
 	}
@@ -178,19 +187,26 @@ public class Sprite extends GameObject {
 		if (animTime > this.currentAnimation.delay) {
 
 			if (this.currentAnimation.loops)
-				this.animIndex = (this.animIndex + 1) % this.currentAnimation.frames.length;
-			else if (this.animIndex < this.currentAnimation.frames.length)
-				this.animIndex++;
+				this.animFrame = (animFrame + 1) % this.currentAnimation.frames.length;
+			else if (this.animFrame < this.currentAnimation.frames.length) {
+				animFrame++;
+			}
 			this.animTime = 0;
+			this.animIndex = (this.currentAnimation.frames[animFrame]);
+
 		}
 		if (frame != animIndex) {
-			drawClip = ImageUtils.getSlice(this.currentAnimation.frames[animIndex], graphic, sliceWidth, sliceHeight);
-			if (flipX) {
-				drawClip = ImageUtils.flipX(drawClip);
-			}
-			if (flipY) {
-				drawClip = ImageUtils.flipY(drawClip);
-			}
+			updateClip();
+		}
+	}
+
+	public void updateClip() {
+		drawClip = ImageUtils.getSlice(this.currentAnimation.frames[animFrame], graphic, sliceWidth, sliceHeight);
+		if (flipX) {
+			drawClip = ImageUtils.flipX(drawClip);
+		}
+		if (flipY) {
+			drawClip = ImageUtils.flipY(drawClip);
 		}
 	}
 
@@ -219,18 +235,22 @@ public class Sprite extends GameObject {
 				lastFlipX = flipX;
 				lastFlipY = flipY;
 
-				/*cam.imageGraphics.drawImage(drawClip,
-						(int) (((int)(x * paralax.x) - offset.y) - cam.x),
-						(int) (((int)(y * paralax.y) - offset.y) - cam.y), null);
-						*/
-				
-				cam.imageGraphics.drawImage(drawClip,
-				((int)((x-offset.x) * paralax.x) - (int)(cam.x)),
-				((int)((y-offset.y) * paralax.y) - (int)(cam.y)),
-				(int)width,
-				(int)height,
-				null);
-				
+				if (!scales)
+					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int)(cam.x - cam.offsetX)),
+							(int) (((int) (y - offset.y) * paralax.y) - (int)(cam.y - cam.offsetY)), null);
+				else
+					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int) (cam.x - cam.offsetX)),
+							((int) ((int) (y - offset.y) * paralax.y) - (int) (cam.y - cam.offsetY)), (int) width, (int) height, null);
+
+				if (Game.debug) {
+					if(movable)
+						cam.imageGraphics.setColor(Color.red);
+					else
+						cam.imageGraphics.setColor(Color.green);
+					cam.imageGraphics.drawRect(((int) ((x) * paralax.x) - (int) (cam.x - cam.offsetX)), ((int) ((y) * paralax.y) - (int) (cam.y - cam.offsetY)), (int) width - 1,
+							(int) height - 1);
+				}
+
 			}
 
 		}
