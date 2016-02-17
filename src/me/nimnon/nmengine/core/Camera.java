@@ -135,6 +135,7 @@ public class Camera {
 		if (width != lastWidth || height != lastHeight) {
 			imageData = new BufferedImage((int) (width / zoom), (int) (height / zoom), BufferedImage.TYPE_INT_ARGB);
 			imageGraphics = imageData.createGraphics();
+			
 		}
 
 		lastWidth = width;
@@ -148,7 +149,7 @@ public class Camera {
 	 *            Graphics to draw to
 	 */
 	public void draw(Graphics2D g2d) {
-
+		
 		g2d.drawImage(imageData, (int) screenx, (int) screeny, (int) width, (int) height, null);
 
 		imageGraphics.setColor(Game.backgroundColor);

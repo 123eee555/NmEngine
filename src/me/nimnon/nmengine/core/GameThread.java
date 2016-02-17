@@ -2,7 +2,9 @@ package me.nimnon.nmengine.core;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import javax.swing.JPanel;
+
 import me.nimnon.nmengine.Game;
 
 /**
@@ -26,7 +28,7 @@ public class GameThread extends JPanel implements Runnable {
 		System.out.println("////////////////////////");
 		System.out.printf("%-6s %s %7s \n", "/", " NmEngine", "/");
 		System.out.println("////////////////////////");
-
+		
 		gameLoop();
 	}
 
@@ -94,7 +96,7 @@ public class GameThread extends JPanel implements Runnable {
 		super.paint(g);
 
 		Graphics2D g2d = (Graphics2D) g;
-
+		
 		if (Game.currentState != null)
 			Game.currentState.draw();
 		for (int i = 0; i < Game.cameras.size(); i++) {
