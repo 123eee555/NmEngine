@@ -2,7 +2,6 @@ package me.nimnon.nmengine.entity;
 
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.util.Random;
 
 import me.nimnon.nmengine.Game;
 
@@ -19,11 +18,11 @@ public class GameObject extends Basic {
 	 * Position on respective axis
 	 */
 	public double x, y = 0d;
-	
+
 	/**
-	 * Whether or not the GameObject is motile
+	 * Whether or not the GameObject is movable by the physics system (use for platforms)
 	 */
-	public boolean unmovable = false;
+	public boolean movable = true;
 
 	/**
 	 * Position paralax of this object in relation to cameras
@@ -66,7 +65,7 @@ public class GameObject extends Basic {
 	public Point2D.Double drag = new Point2D.Double(1, 1);
 
 	public double elasticity = 0;
-	
+
 	/**
 	 * Center of the Object
 	 */
@@ -76,12 +75,12 @@ public class GameObject extends Basic {
 	 * Sides that are currently contacting another solid GameObject
 	 */
 	public boolean[] touching = new boolean[4];
-	
+
 	/**
 	 * Basic object class that handles sprite movement
 	 */
 	public GameObject() {
-		
+
 	}
 
 	/**
@@ -144,12 +143,11 @@ public class GameObject extends Basic {
 	}
 
 	public void preUpdate() {
-		if(!unmovable)
-			updateMotion();
+		updateMotion();
 	}
 
 	public void postUpdate() {
-		
+
 		touching[0] = false;
 		touching[1] = false;
 		touching[2] = false;
@@ -194,13 +192,13 @@ public class GameObject extends Basic {
 	}
 
 	public void draw() {
-		
+
 	}
 
 	@Override
 	public void create() {
-		this.x = x+0.5;
-		this.y = y+0.5;
+		this.x = x + 0.001;
+		this.y = y + 0.001;
 	}
 
 	@Override
