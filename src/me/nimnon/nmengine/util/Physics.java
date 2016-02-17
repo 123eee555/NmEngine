@@ -54,7 +54,7 @@ public class Physics {
 				if (o1.movable && o2.movable) {
 					o1.x -= deltaX;
 					if ((deltaX > 0 && relVelX > 0) || (deltaX < 0 && relVelX < 0))
-						o1.velocity.x = o2.velocity.x * o1.elasticity;
+						o1.velocity.x = -o1.velocity.x * o1.elasticity;
 
 					o2.x += deltaX;
 					if ((deltaX > 0 && relVelX > 0) || (deltaX < 0 && relVelX < 0))
@@ -73,18 +73,27 @@ public class Physics {
 				if (o1.movable && o2.movable) {
 					o1.y -= deltaY * 0.5;
 					if ((deltaY > 0 && relVelY > 0) || (deltaY < 0 && relVelY < 0))
-						o1.velocity.y = o2.velocity.y * o1.elasticity;
+						o1.velocity.y = -o1.velocity.y * o1.elasticity;
+					if(deltaY < 0)
+					o2.x += o1.velocity.x/Game.ticksPerSecond;
 
 					o2.y += deltaY * 0.5;
 					if ((deltaY > 0 && relVelY > 0) || (deltaY < 0 && relVelY < 0))
 						o2.velocity.y = -o2.velocity.y * o2.elasticity;
+					
+					if(-deltaY < 0)
+					o1.x += o2.velocity.x/Game.ticksPerSecond;
 
 				} else if (o1.movable) {
 					o1.y -= deltaY;
 					o1.velocity.y = -o1.velocity.y * o1.elasticity;
+					if(-deltaY < 0)
+					o1.x += o2.velocity.x/Game.ticksPerSecond;
 				} else if (o2.movable) {
 					o2.y += deltaY;
 					o2.velocity.y = -o2.velocity.y * o2.elasticity;
+					if(deltaY < 0)
+					o2.x -= o1.velocity.x/Game.ticksPerSecond;
 				}
 
 			}
