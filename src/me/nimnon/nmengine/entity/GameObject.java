@@ -137,6 +137,11 @@ public class GameObject extends Basic {
 		center.setLocation(this.x + (width / 2), this.y + (height / 2));
 		return center;
 	}
+	
+	public Point2D.Double getMax() {
+		center.setLocation(this.x + (width), this.y + (height));
+		return center;
+	}
 
 	public void update() {
 
