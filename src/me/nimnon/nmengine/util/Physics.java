@@ -92,21 +92,25 @@ public class Physics {
 						o1.x += o2.velocity.x / Game.ticksPerSecond;
 
 				} else if (o1.movable) {
+
+					if (deltaY < 0)
+						o1.touching[0] = true;
+					else
+						o1.touching[1] = true;
+
 					o1.y -= deltaY;
 					if ((deltaY > 0 && relVelY > 0) || (deltaY < 0 && relVelY < 0))
 						o1.velocity.y = -o1.velocity.y * o1.elasticity;
 					if (-deltaY < 0)
 						o1.x += o2.velocity.x / Game.ticksPerSecond;
 
-					if (deltaY < 0)
-						o1.touching[0] = true;
-					else
-						o1.touching[1] = true;
 				} else if (o2.movable) {
+
 					if (deltaY > 0)
 						o2.touching[0] = true;
 					else
 						o2.touching[1] = true;
+
 					o2.y += deltaY;
 					if ((deltaY > 0 && relVelY > 0) || (deltaY < 0 && relVelY < 0))
 						o2.velocity.y = -o2.velocity.y * o2.elasticity;
@@ -124,15 +128,20 @@ public class Physics {
 		boolean returnValue = false;
 
 		for (int i = 0; i < g1.getChildren().size(); i++) {
-			if (g1.getChildren().get(i) instanceof GameObject || g1.getChildren().get(i) instanceof Group) {
+			if (g1.getChildren().get(i) instanceof GameObject) {
 				if (!returnValue) {
 					returnValue = collide(o1, (GameObject) g1.getChildren().get(i));
 
 				} else {
 					collide(o1, (GameObject) g1.getChildren().get(i));
-
 				}
+			} else if (g1.getChildren().get(i) instanceof Group) {
+				if (!returnValue) {
+					returnValue = collide(o1, (Group) g1.getChildren().get(i));
 
+				} else {
+					collide(o1, (Group) g1.getChildren().get(i));
+				}
 			}
 		}
 		return returnValue;
