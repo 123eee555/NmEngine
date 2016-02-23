@@ -51,7 +51,7 @@ public class Sprite extends GameObject {
 
 	public Sprite(double x, double y, double width, double height) {
 		super(x, y, width, height);
-		makeGraphic((int) width, (int) width, color);
+		makeGraphic((int) width, (int) height, color);
 	}
 
 	public Sprite(Rectangle rect) {
