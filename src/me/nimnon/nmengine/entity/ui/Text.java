@@ -10,7 +10,7 @@ public class Text extends UIBasic {
 
 	private BufferedImage graphic;
 
-	private double scale =2;
+	public double scale =1;
 	
 	private String text;
 
@@ -54,8 +54,8 @@ public class Text extends UIBasic {
 		for (int i = 0; i < Game.cameras.size(); i++) {
 			Camera cam = Game.cameras.get(i);
 			if (cam.isOnScreen(this)) {
-				cam.imageGraphics.drawImage(graphic, (int) (((int) (x) * paralax.x) - (int) (cam.x - cam.offsetX)),
-						(int) (((int) (y) * paralax.y) - (int) (cam.y - cam.offsetY)),(int)width,(int)height, null);
+				cam.imageGraphics.drawImage(graphic, (int) (((int) (x) * paralax.x) - (int) (cam.x - cam.getOffsetX())),
+						(int) (((int) (y) * paralax.y) - (int) (cam.y - cam.getOffsetY())),(int)width,(int)height, null);
 			}
 		}
 	}
