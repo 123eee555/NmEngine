@@ -145,7 +145,7 @@ public class Sprite extends GameObject {
 		if (!scales)
 			return drawClip.getHeight();
 		else
-			return (int) width;
+			return (int) height;
 	}
 
 	public int getSpriteWidth() {
@@ -236,18 +236,18 @@ public class Sprite extends GameObject {
 				lastFlipY = flipY;
 
 				if (!scales)
-					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int)(cam.x - cam.offsetX)),
-							(int) (((int) (y - offset.y) * paralax.y) - (int)(cam.y - cam.offsetY)), null);
+					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int)(cam.x - cam.getOffsetX())),
+							(int) (((int) (y - offset.y) * paralax.y) - (int)(cam.y - cam.getOffsetY())), null);
 				else
-					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int) (cam.x - cam.offsetX)),
-							((int) ((int) (y - offset.y) * paralax.y) - (int) (cam.y - cam.offsetY)), (int) width, (int) height, null);
+					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int) (cam.x - cam.getOffsetX())),
+							((int) ((int) (y - offset.y) * paralax.y) - (int) (cam.y - cam.getOffsetY())), (int) width, (int) height, null);
 
 				if (Game.debug) {
 					if(movable)
 						cam.imageGraphics.setColor(Color.red);
 					else
 						cam.imageGraphics.setColor(Color.green);
-					cam.imageGraphics.drawRect(((int) ((x) * paralax.x) - (int) (cam.x - cam.offsetX)), ((int) ((y) * paralax.y) - (int) (cam.y - cam.offsetY)), (int) width - 1,
+					cam.imageGraphics.drawRect(((int) ((x) * paralax.x) - (int) (cam.x - cam.getOffsetX())), ((int) ((y) * paralax.y) - (int) (cam.y - cam.getOffsetY())), (int) width - 1,
 							(int) height - 1);
 				}
 

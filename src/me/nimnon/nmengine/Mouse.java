@@ -84,19 +84,11 @@ public class Mouse {
 	}
 
 	public double getxWorld() {
-		return xWorld;
-	}
-
-	public void setxWorld(double xWorld) {
-		this.xWorld = xWorld;
+		return (x/ Game.activeCamera.zoom) + (Game.activeCamera.x);
 	}
 
 	public double getyWorld() {
-		return yWorld;
-	}
-
-	public void setyWorld(double yWorld) {
-		this.yWorld = yWorld;
+		return (y/ Game.activeCamera.zoom) + (Game.activeCamera.y);
 	}
 
 	public double getX() {

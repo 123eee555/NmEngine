@@ -52,15 +52,20 @@ public class Game {
 	public static int ticksPerSecond = 60;
 
 	/**
-	 * Static Mouse instance for getting mouse Properties
+	 * Static Mouse instance for getting mouse properties
 	 */
 	public static Mouse mouse = new Mouse();
+	
+	/**
+	 * Static Keys instance for getting key properties
+	 */
+	public static Keys keys = new Keys();
 
 	/**
 	 * Text writing utility class
 	 */
 	public static Font fonts = new Font();
-	
+
 	/**
 	 * Current focused camera
 	 */
@@ -90,15 +95,17 @@ public class Game {
 	 * Game width
 	 */
 	public static int gameWidth;
-	
+
 	/**
 	 * Game height
 	 */
 	public static int gameHeight;
-	
+
 	private static Cursor blankCursor;
 	private static Cursor systemCursor;
-	
+
+	private static double zoom = 1;
+
 	/**
 	 * Creates a new Game class, it is advised you only create one of these,
 	 * else weird things happen.
@@ -185,8 +192,10 @@ public class Game {
 	/**
 	 * Creates a 400x300px window with the specified state and title
 	 * 
-	 * @param title Window title 
-	 * @param state Game starting state
+	 * @param title
+	 *            Window title
+	 * @param state
+	 *            Game starting state
 	 */
 	public Game(String title, State state) {
 		createGame(400, 300, title, state, 60, 2, Color.white);
@@ -238,11 +247,11 @@ public class Game {
 	private void createGame(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor) {
 		if (state == null)
 			state = new State();
-		
+
 		ticksPerSecond = tps;
-		
-		gameWidth = (int) (width/zoom);
-		gameHeight = (int) (height/zoom);
+
+		gameWidth = (int) (width / zoom);
+		gameHeight = (int) (height / zoom);
 
 		mouseListener = new MousePadListener();
 		keyListener = new KeyboardListener();
@@ -266,20 +275,20 @@ public class Game {
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 
-		activeCamera = new Camera(0, 0, width, height, zoom);
-		cameras.add(activeCamera);
+		Game.zoom  = zoom;
+		switchState(state);
 
 		thread.addMouseListener(mouseListener);
 		thread.addMouseMotionListener(mouseListener);
 		thread.addKeyListener(keyListener);
 
-		Game.blankCursor = window.getToolkit().createCustomCursor( new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null );
+		Game.blankCursor = window.getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null);
 		Game.systemCursor = Cursor.getDefaultCursor();
-		
+
 		while (!thread.hasFocus())
 			thread.grabFocus();
 
-		switchState(state);
+		
 
 		new Thread(thread).start();
 
@@ -298,15 +307,22 @@ public class Game {
 		if (currentState != null)
 			currentState.destroy();
 		currentState = state;
+		
+		Game.cameras.clear();
+		Game.activeCamera = new Camera(0, 0, thread.getWidth(), thread.getHeight(), Game.zoom);
+		Game.cameras.add(Game.activeCamera);
+		
 		showCursor();
 		state.create();
 
+		
 	}
 
 	/**
 	 * Returns true if key was just pressed.
 	 * 
-	 * @param charCode Ascii keycode to check
+	 * @param charCode
+	 *            Ascii keycode to check
 	 * @return if character was just pressed
 	 */
 	public static boolean getKeyJustPressed(int charCode) {
@@ -321,7 +337,8 @@ public class Game {
 	/**
 	 * Returns true if key is pressed down.
 	 * 
-	 * @param charCode Ascii keycode to check
+	 * @param charCode
+	 *            Ascii keycode to check
 	 * @return if character is down
 	 */
 	public static boolean getKeyPressed(int charCode) {
@@ -330,11 +347,11 @@ public class Game {
 		else
 			return false;
 	}
-	
+
 	public static void hideCursor() {
 		window.setCursor(blankCursor);
 	}
-	
+
 	public static void showCursor() {
 		window.setCursor(systemCursor);
 	}
