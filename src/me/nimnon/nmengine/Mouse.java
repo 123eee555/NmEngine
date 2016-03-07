@@ -8,11 +8,6 @@ public class Mouse {
 	private double x, y = 0d;
 
 	/**
-	 * Cursor position in the world from the reference of the main camera
-	 */
-	private double xWorld, yWorld = 0d;
-
-	/**
 	 * Is respective mouse button down?
 	 */
 	private boolean mouse1Down, mouse2Down, mouse3Down = false;
