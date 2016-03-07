@@ -309,11 +309,9 @@ public class Game {
 		currentState = state;
 		
 		Game.cameras.clear();
-<<<<<<< HEAD
+
 		Game.activeCamera = new Camera(0, 0, thread.getWidth(), thread.getHeight(), Game.zoom);
-=======
-		Game.activeCamera = new Camera(0, 0, window.getWidth(), window.getHeight(), Game.zoom);
->>>>>>> origin/master
+
 		Game.cameras.add(Game.activeCamera);
 		
 		showCursor();

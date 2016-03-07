@@ -94,12 +94,9 @@ public class Camera {
 	private ArrayList<Point2D.Double> targetPoints;
 
 	private Point2D.Double targetPoint;
-<<<<<<< HEAD
 	
 	private double dist;
-=======
 
->>>>>>> origin/master
 	/**
 	 * Sets up a plain camera with default properties
 	 */
@@ -143,25 +140,7 @@ public class Camera {
 		if (target != null) {
 			desiredCamX = Math.max(Math.min((target.getCenter().x - offset.x) - ((width / zoom) / 2), bounds.getMaxX() - (width / zoom)), bounds.x);
 			desiredCamY = Math.max(Math.min((target.getCenter().y - offset.y) - ((height / zoom) / 2), bounds.getMaxY() - (height / zoom)), bounds.y);
-<<<<<<< HEAD
-		}
 
-		double ratio = (width / zoom) / (height / zoom);
-		double minDist = (ratio < 0.5d) ? height / 3 : width / 3;
-
-		if (target != null && targetPoint == null) {
-			x -= ((int) ((x) + ((width / zoom) / 2)) - (int) target.getCenter().x - offset.x) / (Game.ticksPerSecond / lerp);
-			y -= ((int) ((y) + ((height / zoom) / 2)) - (int) target.getCenter().y - offset.y) / (Game.ticksPerSecond / lerp);
-		} else if (targetPoint != null) {
-			x -= ((int) ((x) + ((width / zoom) / 2)) - (int) targetPoint.x - offset.x) / (Game.ticksPerSecond / lerp);
-			y -= ((int) ((y) + ((height / zoom) / 2)) - (int) targetPoint.y - offset.y) / (Game.ticksPerSecond / lerp);
-		}
-
-		for (int i = 0; i < targetPoints.size(); i++) {
-			Point2D.Double tp = targetPoints.get(i);
-			dist = Point2D.distance(desiredCamX + ((width / zoom) / 2), desiredCamY + ((height / zoom) / 2), tp.x, tp.y);
-			
-=======
 		}
 
 		double ratio = (width / zoom) / (height / zoom);
@@ -179,7 +158,6 @@ public class Camera {
 			Point2D.Double tp = targetPoints.get(i);
 			double dist = Point2D.distance(desiredCamX + ((width / zoom) / 2), desiredCamY + ((height / zoom) / 2), tp.x, tp.y);
 			System.out.println(dist);
->>>>>>> origin/master
 			if (dist < 100) {
 				targetPoint = tp;
 				// minDist = dist;
