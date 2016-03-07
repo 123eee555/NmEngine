@@ -95,8 +95,7 @@ public class Camera {
 
 	private Point2D.Double targetPoint;
 	
-	public double dist;
-
+	private double dist;
 	/**
 	 * Sets up a plain camera with default properties
 	 */
@@ -198,7 +197,7 @@ public class Camera {
 	 *            Graphics to draw to
 	 */
 	public void draw(Graphics2D g2d) {
-
+		
 		g2d.drawImage(imageData, (int) screenx, (int) screeny, (int) width, (int) height, null);
 
 		imageGraphics.setColor(Game.backgroundColor);
