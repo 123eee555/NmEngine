@@ -1,11 +1,11 @@
 package me.nimnon.nmengine.core;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.awt.Rectangle;
 
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.entity.Basic;
@@ -95,7 +95,6 @@ public class Camera {
 
 	private Point2D.Double targetPoint;
 	
-	private double dist;
 
 	/**
 	 * Sets up a plain camera with default properties
@@ -199,7 +198,7 @@ public class Camera {
 	 *            Graphics to draw to
 	 */
 	public void draw(Graphics2D g2d) {
-
+		//ImageUtils.ditherImage(imageData);
 		g2d.drawImage(imageData, (int) screenx, (int) screeny, (int) width, (int) height, null);
 
 		imageGraphics.setColor(Game.backgroundColor);
