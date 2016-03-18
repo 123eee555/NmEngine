@@ -1,7 +1,5 @@
 package me.nimnon.nmengine.entity.tile;
 
-import java.awt.Color;
-
 import me.nimnon.nmengine.entity.Group;
 import me.nimnon.nmengine.entity.Sprite;
 
