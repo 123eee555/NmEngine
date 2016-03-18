@@ -12,12 +12,8 @@ import javax.imageio.ImageIO;
 
 public class ImageUtils {
 
-	private static int[][] thresholdMap = new int[][] {
-		{1,9,3,11},
-		{13,5,15,7},
-		{4,12,2,10},
-		{16,8,14,6}
-	};
+	private static int[][] thresholdMap = new int[][] { { 1, 9, 3, 11 }, { 13, 5, 15, 7 }, { 4, 12, 2, 10 }, { 16, 8, 14, 6 } };
+
 	/**
 	 * Returns an image slice from specified image, based on index, useful for
 	 * picking images out of a sprite sheet.
@@ -50,7 +46,7 @@ public class ImageUtils {
 		return retImage;
 	}
 
-	public static void ditherImage(BufferedImage image) {
+	public static BufferedImage ditherImage(BufferedImage image) {
 		int w = image.getWidth();
 		int h = image.getHeight();
 
@@ -65,13 +61,16 @@ public class ImageUtils {
 		for (int x = 0; x < w * h; x++) {
 			int rX = x % w;
 			int rY = (int) Math.floor(x / w);
-			oldpixel = ditherPixel(pixels[x],rX,rY);
+			oldpixel = ditherPixel(pixels[x], rX, rY);
 			// System.out.println(rX + "|" + rY);
 			newpixel = quantize(oldpixel);
 			newpixels[x] = newpixel;
 		}
-		image.setRGB(0, 0, w, h, newpixels, 0, w);
+		BufferedImage newimage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		newimage.setRGB(0, 0, w, h, newpixels, 0, w);
+		return newimage;
 	}
+
 	public static int ditherPixel(int oldpixel, int x, int y) {
 
 		int a = (oldpixel >> 24) & 0xff;
@@ -79,9 +78,11 @@ public class ImageUtils {
 		int g = (oldpixel >> 8) & 0xff;
 		int b = (oldpixel >> 0) & 0xff;
 
-		int color = Math.min(0xff,a + thresholdMap[y%4][x%4]) << 24 |  Math.min(0xff,r + thresholdMap[y%4][x%4]) << 16 | Math.min(0xff, g + thresholdMap[y%4][x%4]) << 8 | (int) Math.min(0xff, b + thresholdMap[y%4][x%4]) << 0;
+		int color = Math.min(0xff, a + thresholdMap[y % 4][x % 4]) << 24 | Math.min(0xff, r + thresholdMap[y % 4][x % 4]) << 16
+				| Math.min(0xff, g + thresholdMap[y % 4][x % 4]) << 8 | (int) Math.min(0xff, b + thresholdMap[y % 4][x % 4]) << 0;
 		return color;
 	}
+
 	public static int quantize(int oldpixel) {
 
 		int a = (oldpixel >> 24) & 0xff;
@@ -89,7 +90,8 @@ public class ImageUtils {
 		int g = (oldpixel >> 8) & 0xff;
 		int b = (oldpixel >> 0) & 0xff;
 
-		int color = (int) ((a / 32) * (255.0 / 7)) << 24 | (int) ((r / 32) * (255.0 / 7)) << 16 | (int) ((g / 32) * (255.0 / 7)) << 8 | (int) ((b / 32) * (255.0 / 7)) << 0;
+		int color = (int) ((a / 32) * (255.0 / 7)) << 24 | (int) ((r / 32) * (255.0 / 7)) << 16 | (int) ((g / 32) * (255.0 / 7)) << 8
+				| (int) ((b / 32) * (255.0 / 7)) << 0;
 		return color;
 	}
 
@@ -123,6 +125,26 @@ public class ImageUtils {
 		AffineTransform ty = AffineTransform.getScaleInstance(1, -1);
 		ty.translate(0, -image.getHeight());
 		AffineTransformOp op = new AffineTransformOp(ty, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		return op.filter(image, null);
+	}
+
+	public static BufferedImage rotate(BufferedImage image, double rot, boolean radians) {
+		double rads = rot%(Math.PI*2);
+		if (!radians)
+			rads = Math.toRadians(rot%360);
+
+		double pivotX = image.getWidth() / 2;
+		double pivotY = image.getHeight() / 2;
+		
+		AffineTransform tx = new AffineTransform();
+		
+		
+		
+		tx.translate(pivotX,pivotY);
+		tx.rotate(rads);
+		tx.translate(-pivotX, -pivotY);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		
 		return op.filter(image, null);
 	}
 

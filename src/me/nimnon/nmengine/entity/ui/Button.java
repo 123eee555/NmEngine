@@ -75,10 +75,10 @@ public abstract class Button extends NineSlice {
 	public abstract void onPress();
 
 	public void update() {
-		if (Game.mouse.getxWorld() > (int) x - (int) (Game.activeCamera.x * paralax.x)
-				&& Game.mouse.getxWorld() < (int) x - (int) (Game.activeCamera.x * paralax.x) + width
-				&& Game.mouse.getyWorld() > (int) y - (int) (Game.activeCamera.y * paralax.y)
-				&& Game.mouse.getyWorld() < (int) y - (int) (Game.activeCamera.y * paralax.y) + height) {
+		if (Game.mouse.getXWorld() > (int) x - (int) (Game.activeCamera.x * paralax.x)
+				&& Game.mouse.getXWorld() < (int) x - (int) (Game.activeCamera.x * paralax.x) + width
+				&& Game.mouse.getYWorld() > (int) y - (int) (Game.activeCamera.y * paralax.y)
+				&& Game.mouse.getYWorld() < (int) y - (int) (Game.activeCamera.y * paralax.y) + height) {
 			mouseOn = true;
 		} else {
 			mouseOn = false;

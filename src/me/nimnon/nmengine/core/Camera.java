@@ -198,7 +198,7 @@ public class Camera {
 	 *            Graphics to draw to
 	 */
 	public void draw(Graphics2D g2d) {
-		//ImageUtils.ditherImage(imageData);
+		
 		g2d.drawImage(imageData, (int) screenx, (int) screeny, (int) width, (int) height, null);
 
 		imageGraphics.setColor(Game.backgroundColor);

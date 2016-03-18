@@ -42,6 +42,8 @@ public class Font {
 	public BufferedImage makeString(String string, Color color, Color background) {
 		
 		int length = getStringWidth(string);
+		if (length==0)
+			length = 1;
 
 		BufferedImage textImage = new BufferedImage(length, 8, BufferedImage.TYPE_INT_ARGB);
 

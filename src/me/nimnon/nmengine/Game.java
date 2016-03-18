@@ -3,7 +3,10 @@ package me.nimnon.nmengine;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -126,8 +129,32 @@ public class Game {
 	 * @param backgroundColor
 	 *            Background color of the application.
 	 */
+	public Game(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor, Image icon) {
+		createGame(width, height, title, state, tps, zoom, backgroundColor, icon);
+	}
+	
+	/**
+	 * Creates a new Game class, it is advised you only create one of these,
+	 * else weird things happen.
+	 * 
+	 * @param width
+	 *            Game width in pixels
+	 * @param height
+	 *            Game height in pixels
+	 * @param title
+	 *            Window title
+	 * @param state
+	 *            Game starting state, if null is treated as a new State()
+	 * @param tps
+	 *            Ticks per second, how many times a second the update method is
+	 *            called.
+	 * @param zoom
+	 *            Zoom of the initial main camera object
+	 * @param backgroundColor
+	 *            Background color of the application.
+	 */
 	public Game(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor) {
-		createGame(width, height, title, state, tps, zoom, backgroundColor);
+		createGame(width, height, title, state, tps, zoom, backgroundColor, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -149,7 +176,7 @@ public class Game {
 	 *            Background color of the application.
 	 */
 	public Game(int width, int height, String title, State state, int tps, Color backgroundColor) {
-		createGame(width, height, title, state, tps, 2, backgroundColor);
+		createGame(width, height, title, state, tps, 2, backgroundColor, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -169,7 +196,7 @@ public class Game {
 	 *            called.
 	 */
 	public Game(int width, int height, String title, State state, int tps) {
-		createGame(width, height, title, state, tps, 2, Color.white);
+		createGame(width, height, title, state, tps, 2, Color.white, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -186,19 +213,7 @@ public class Game {
 	 *            Game starting state
 	 */
 	public Game(int width, int height, String title, State state) {
-		createGame(width, height, title, state, 60, 2, Color.white);
-	}
-
-	/**
-	 * Creates a 400x300px window with the specified state and title
-	 * 
-	 * @param title
-	 *            Window title
-	 * @param state
-	 *            Game starting state
-	 */
-	public Game(String title, State state) {
-		createGame(400, 300, title, state, 60, 2, Color.white);
+		createGame(width, height, title, state, 60, 2, Color.white, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -213,7 +228,7 @@ public class Game {
 	 * 
 	 */
 	public Game(int width, int height, String title) {
-		createGame(width, height, title, new State(), 2, 60, Color.white);
+		createGame(width, height, title, new State(), 2, 60, Color.white, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -225,14 +240,14 @@ public class Game {
 	 *            Game height in pixels
 	 */
 	public Game(int width, int height) {
-		createGame(width, height, "Game", new State(), 2, 60, Color.white);
+		createGame(width, height, "Game", new State(), 2, 60, Color.white, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
 	 * Creates empty game window of a blank state
 	 */
 	public Game() {
-		createGame(400, 300, "Game", new State(), 2, 60, Color.white);
+		createGame(400, 300, "Game", new State(), 2, 60, Color.white, new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	/**
@@ -244,7 +259,7 @@ public class Game {
 	 * @param state
 	 * @param tps
 	 */
-	private void createGame(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor) {
+	private void createGame(int width, int height, String title, State state, int tps, double zoom, Color backgroundColor, Image icon) {
 		if (state == null)
 			state = new State();
 
@@ -263,6 +278,9 @@ public class Game {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setFocusable(true);
 		window.setResizable(false);
+		
+		
+		window.setIconImage(icon);
 
 		thread.setPreferredSize(new Dimension(width, height));
 		Game.backgroundColor = backgroundColor;
@@ -270,13 +288,15 @@ public class Game {
 		thread.setFocusable(true);
 
 		window.add(thread);
+		
 
 		window.pack();
+		window.setMinimumSize(new Dimension(window.getWidth(), window.getHeight()));
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 
 		Game.zoom  = zoom;
-		switchState(state);
+		
 
 		thread.addMouseListener(mouseListener);
 		thread.addMouseMotionListener(mouseListener);
@@ -287,7 +307,7 @@ public class Game {
 
 		while (!thread.hasFocus())
 			thread.grabFocus();
-
+		switchState(state);
 		
 
 		new Thread(thread).start();
@@ -306,6 +326,8 @@ public class Game {
 			state = new State();
 		if (currentState != null)
 			currentState.destroy();
+		//showCursor();
+		
 		currentState = state;
 		
 		Game.cameras.clear();
@@ -314,10 +336,7 @@ public class Game {
 
 		Game.cameras.add(Game.activeCamera);
 		
-		showCursor();
 		state.create();
-
-		
 	}
 
 	/**
@@ -357,4 +376,10 @@ public class Game {
 	public static void showCursor() {
 		window.setCursor(systemCursor);
 	}
+	
+	public static void setIconImage(Image icon) {
+		window.setIconImage(icon);
+	}
+	
+
 }

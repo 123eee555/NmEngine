@@ -78,11 +78,11 @@ public class Mouse {
 		this.mouse3Down = mouse3Down;
 	}
 
-	public double getxWorld() {
+	public double getXWorld() {
 		return (x/ Game.activeCamera.zoom) + (Game.activeCamera.x);
 	}
 
-	public double getyWorld() {
+	public double getYWorld() {
 		return (y/ Game.activeCamera.zoom) + (Game.activeCamera.y);
 	}
 
