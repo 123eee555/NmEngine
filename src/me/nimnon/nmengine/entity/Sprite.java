@@ -31,12 +31,17 @@ public class Sprite extends GameObject {
 	private int sliceHeight;
 
 	public boolean scales = false;
+	public int scale = 1;
+	
 	public boolean flipX;
 	private boolean lastFlipX = false;
 	public boolean flipY;
 	private boolean lastFlipY = false;
 
 	public Point offset = new Point(0, 0);
+	public int rotation;
+	private int lastRot;
+	
 
 	// Constructors
 	public Sprite() {
@@ -65,12 +70,12 @@ public class Sprite extends GameObject {
 		this.width = width;
 		this.height = height;
 		this.graphic = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		this.drawClip = graphic;
 		Graphics2D g2d = this.graphic.createGraphics();
 
 		g2d.setColor(color);
 		g2d.fillRect(0, 0, (int) width, (int) height);
 		g2d.dispose();
+		this.drawClip = ImageUtils.getSlice(0, graphic, width, height);
 	}
 
 	public void loadGraphic(String path) {
@@ -201,12 +206,18 @@ public class Sprite extends GameObject {
 	}
 
 	public void updateClip() {
-		drawClip = ImageUtils.getSlice(this.currentAnimation.frames[animFrame], graphic, sliceWidth, sliceHeight);
+		if(animated)
+			drawClip = ImageUtils.getSlice(this.currentAnimation.frames[animFrame], graphic, sliceWidth, sliceHeight);
+		else
+			drawClip = ImageUtils.getSlice(0, graphic, (int)width, (int)height);
 		if (flipX) {
 			drawClip = ImageUtils.flipX(drawClip);
 		}
 		if (flipY) {
 			drawClip = ImageUtils.flipY(drawClip);
+		}
+		if (rotation != 0) {
+			drawClip = ImageUtils.rotate(drawClip, rotation, false);
 		}
 	}
 
@@ -226,21 +237,21 @@ public class Sprite extends GameObject {
 			Camera cam = Game.cameras.get(i);
 			if (cam.isOnScreen(this)) {
 
-				if (flipX != lastFlipX) {
-					drawClip = ImageUtils.flipX(drawClip);
+				if (flipX != lastFlipX || flipY != lastFlipY || rotation != lastRot) {
+					updateClip();
 				}
-				if (flipY != lastFlipY) {
-					drawClip = ImageUtils.flipY(drawClip);
-				}
+
+				lastRot = rotation;
 				lastFlipX = flipX;
 				lastFlipY = flipY;
+				
 
 				if (!scales)
 					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int)(cam.x - cam.getOffsetX())),
 							(int) (((int) (y - offset.y) * paralax.y) - (int)(cam.y - cam.getOffsetY())), null);
 				else
 					cam.imageGraphics.drawImage(drawClip, (int) (((int) (x - offset.x) * paralax.x) - (int) (cam.x - cam.getOffsetX())),
-							((int) ((int) (y - offset.y) * paralax.y) - (int) (cam.y - cam.getOffsetY())), (int) width, (int) height, null);
+							((int) ((int) (y - offset.y) * paralax.y) - (int) (cam.y - cam.getOffsetY())), (int) drawClip.getWidth()*scale, (int) (int) drawClip.getHeight()*scale, null);
 
 				if (Game.debug) {
 					if(movable)
