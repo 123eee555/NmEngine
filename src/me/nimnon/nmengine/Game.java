@@ -298,10 +298,11 @@ public class Game {
 
 		thread.addMouseListener(mouseListener);
 		thread.addMouseMotionListener(mouseListener);
+		thread.addMouseWheelListener(mouseListener);
 		thread.addKeyListener(keyListener);
 
-		Game.blankCursor = window.getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null);
-		Game.systemCursor = Cursor.getDefaultCursor();
+		blankCursor = window.getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null);
+		systemCursor = Cursor.getDefaultCursor();
 
 		while (!thread.hasFocus())
 			thread.grabFocus();
@@ -337,35 +338,7 @@ public class Game {
 		state.create();
 	}
 
-	/**
-	 * Returns true if key was just pressed.
-	 * 
-	 * @param charCode
-	 *            Ascii keycode to check
-	 * @return if character was just pressed
-	 */
-	public static boolean getKeyJustPressed(int charCode) {
-		if (keyListener.keysJustPressed[charCode]) {
-			keyListener.keysJustPressed[charCode] = false;
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Returns true if key is pressed down.
-	 * 
-	 * @param charCode
-	 *            Ascii keycode to check
-	 * @return if character is down
-	 */
-	public static boolean getKeyPressed(int charCode) {
-		if (keyListener.keys[charCode])
-			return true;
-		else
-			return false;
-	}
+	
 
 	public static void hideCursor() {
 		window.setCursor(blankCursor);

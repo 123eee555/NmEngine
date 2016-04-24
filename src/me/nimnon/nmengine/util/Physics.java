@@ -3,6 +3,7 @@ package me.nimnon.nmengine.util;
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.entity.GameObject;
 import me.nimnon.nmengine.entity.Group;
+import me.nimnon.nmengine.entity.tile.TileMap;
 
 public class Physics {
 
@@ -167,11 +168,41 @@ public class Physics {
 					returnValue = collide((Group) g1.getChildren().get(i), g2);
 				} else {
 					collide((Group) g1.getChildren().get(i), g2);
-
 				}
 			}
 		}
 
+		return returnValue;
+	}
+	
+	public static boolean collide(GameObject o1, TileMap g1) {
+		boolean returnValue = false;
+
+		for (int i = 0; i < g1.getChildren().length; i++) {
+			if (g1.getChildren()[i] instanceof GameObject) {
+				if (!returnValue) {
+					returnValue = collide(o1, (GameObject) g1.getChildren()[i]);
+
+				} else {
+					collide(o1, (GameObject) g1.getChildren()[i]);
+				}
+			}
+		}
+		return returnValue;
+	}
+	
+	public static boolean collide(Group g1, TileMap g2) {
+		boolean returnValue = false;
+		for (int i = 0; i < g1.getChildren().size(); i++) {
+			if (g1.getChildren().get(i) instanceof GameObject) {
+				if (!returnValue) {
+					returnValue = collide((GameObject)g1.getChildren().get(i), g2);
+
+				} else {
+					collide((GameObject)g1.getChildren().get(i), g2);
+				}
+			}
+		}
 		return returnValue;
 	}
 

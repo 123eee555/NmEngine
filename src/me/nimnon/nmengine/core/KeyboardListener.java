@@ -3,25 +3,20 @@ package me.nimnon.nmengine.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import me.nimnon.nmengine.Game;
+
 public class KeyboardListener implements KeyListener {
 
-	public boolean[] keys;
-	public boolean[] keysJustPressed;
-	
-	public KeyboardListener() {
-		keys = new boolean[1024];
-		keysJustPressed = new boolean[1024];
-	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		try
 		{
-			if(!keys[e.getKeyCode()])
+			if(!Game.keys.keys[e.getKeyCode()])
 			{
-				keysJustPressed[e.getKeyCode()] = true;
+				Game.keys.keysJustPressed[e.getKeyCode()] = true;
 			}
-			keys[e.getKeyCode()] = true;
+			Game.keys.keys[e.getKeyCode()] = true;
 		} 
 		catch(Exception e2)
 		{
@@ -31,7 +26,7 @@ public class KeyboardListener implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keys[e.getKeyCode()] = false;
+		Game.keys.keys[e.getKeyCode()] = false;
 	}
 
 	@Override

@@ -3,10 +3,12 @@ package me.nimnon.nmengine.core;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import me.nimnon.nmengine.Game;
 
-public class MousePadListener implements MouseListener, MouseMotionListener {
+public class MousePadListener implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	public MousePadListener() {
 
@@ -93,6 +95,12 @@ public class MousePadListener implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		// TODO Auto-generated method stub
+		Game.mouse.setMouseScroll(e.getWheelRotation());
 	}
 
 }

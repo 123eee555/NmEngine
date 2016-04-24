@@ -144,7 +144,7 @@ public class GameObject extends Basic {
 	}
 
 	public void update() {
-
+		
 	}
 
 	public void preUpdate() {

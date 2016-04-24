@@ -14,6 +14,8 @@ public class Mouse {
 
 	private boolean mouse1JustPressed, mouse2JustPressed, mouse3JustPressed = false;
 
+	private int scroll;
+
 	public Mouse() {
 		
 	}
@@ -100,6 +102,14 @@ public class Mouse {
 
 	public void setY(double y) {
 		this.y = y;
+	}
+
+	public void setMouseScroll(int wheelRotation) {
+		scroll = wheelRotation;
+	}
+	
+	public int getMouseScroll() {
+		return scroll;
 	}
 
 }
