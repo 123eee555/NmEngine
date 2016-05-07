@@ -1,9 +1,9 @@
 package me.nimnon.nmengine.entity;
 
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 
 import me.nimnon.nmengine.Game;
+import me.nimnon.nmengine.util.Vector2;
 
 /**
  * Game object class, skeleton for the sprite class that handles motion and
@@ -27,7 +27,7 @@ public class GameObject extends Basic {
 	/**
 	 * Position paralax of this object in relation to cameras
 	 */
-	public Point2D.Double paralax = new Point2D.Double(1, 1);
+	public Vector2 paralax = new Vector2(1, 1);
 
 	/**
 	 * Size on respective axis
@@ -37,39 +37,39 @@ public class GameObject extends Basic {
 	/**
 	 * Where this object was last frame
 	 */
-	public Point2D.Double last = new Point2D.Double(0, 0);
+	public Vector2 last = new Vector2(0, 0);
 
 	/**
 	 * Where this object might be next frame
 	 */
-	public Point2D.Double next = new Point2D.Double(0, 0);
+	public Vector2 next = new Vector2(0, 0);
 
 	/**
 	 * Maximum velocity.
 	 */
-	public Point2D.Double maxVelocity = new Point2D.Double(0, 0);
+	public Vector2 maxVelocity = new Vector2(0, 0);
 
 	/**
 	 * Current velocity in pixels per second
 	 */
-	public Point2D.Double velocity = new Point2D.Double(0, 0);
+	public Vector2 velocity = new Vector2(0, 0);
 
 	/**
 	 * Current acceleration in pixels per second
 	 */
-	public Point2D.Double acceleration = new Point2D.Double(0, 0);
+	public Vector2 acceleration = new Vector2(0, 0);
 
 	/**
 	 * Drag on each axis
 	 */
-	public Point2D.Double drag = new Point2D.Double(1, 1);
+	public double drag = 0;
 
 	public double elasticity = 0;
 
 	/**
 	 * Center of the Object
 	 */
-	private Point2D.Double center = new Point2D.Double(x + (width / 2), y + (height / 2));
+	private Vector2 center = new Vector2(x + (width / 2), y + (height / 2));
 
 	/**
 	 * Sides that are currently contacting another solid GameObject
@@ -133,13 +133,13 @@ public class GameObject extends Basic {
 	 * 
 	 * @return center
 	 */
-	public Point2D.Double getCenter() {
-		center.setLocation(this.x + (width / 2), this.y + (height / 2));
+	public Vector2 getCenter() {
+		center.set(this.x + (width / 2), this.y + (height / 2));
 		return center;
 	}
 	
-	public Point2D.Double getMax() {
-		center.setLocation(this.x + (width), this.y + (height));
+	public Vector2 getMax() {
+		center.set(this.x + (width), this.y + (height));
 		return center;
 	}
 
@@ -163,8 +163,8 @@ public class GameObject extends Basic {
 	 * Updates the position and motion of this gameObject
 	 */
 	private void updateMotion() {
-		last.setLocation(x, y);
-		next.setLocation(x + (velocity.x / Game.ticksPerSecond), y + (velocity.y / Game.ticksPerSecond));
+		last.set(x, y);
+		next.set(x + (velocity.x / Game.ticksPerSecond), y + (velocity.y / Game.ticksPerSecond));
 
 		velocity.x += acceleration.x / Game.ticksPerSecond;
 		velocity.y += acceleration.y / Game.ticksPerSecond;
@@ -177,27 +177,14 @@ public class GameObject extends Basic {
 		x += velocity.x / Game.ticksPerSecond;
 		y += velocity.y / Game.ticksPerSecond;
 
-		if (velocity.x > 0) {
-			velocity.x -= drag.x / Game.ticksPerSecond;
-		} else {
-			velocity.x += drag.x / Game.ticksPerSecond;
-		}
-		if (velocity.y > 0) {
-			velocity.y -= drag.y / Game.ticksPerSecond;
-		} else {
-			velocity.y += drag.y / Game.ticksPerSecond;
-		}
-		if (Math.abs(velocity.x) <= drag.x / Game.ticksPerSecond && acceleration.x == 0) {
-			velocity.x = 0;
-		}
-
-		if (Math.abs(velocity.y) <= drag.y / Game.ticksPerSecond && acceleration.y == 0) {
-			velocity.y = 0;
-		}
+		if(velocity.length() > drag/Game.ticksPerSecond)
+			velocity = velocity.shortenLength(drag/Game.ticksPerSecond);
+		else
+			velocity.set(0, 0);
 	}
 
 	public void draw() {
-
+		
 	}
 
 	@Override

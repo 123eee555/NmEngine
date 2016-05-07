@@ -7,17 +7,17 @@ import java.util.Comparator;
 import me.nimnon.nmengine.util.Holder;
 
 /**
- * Group class, holds a group of Basics, useful for layering
+ * Group class, holds a group of a predefined type, useful for layering
  * 
  * @author Nimnon
  *
  */
-public class Group extends Basic implements Holder<Basic> {
+public class TypedGroup<T extends Basic> extends Basic implements Holder<T> {
 
 	/**
 	 * Children Array
 	 */
-	protected ArrayList<Basic> children = new ArrayList<Basic>();
+	protected ArrayList<T> children = new ArrayList<>();
 
 	/**
 	 * Sort this array by children's y axis? Useful for top-down games
@@ -27,7 +27,7 @@ public class Group extends Basic implements Holder<Basic> {
 	/**
 	 * Creates an empty group
 	 */
-	public Group() {
+	public TypedGroup() {
 
 	}
 
@@ -72,7 +72,7 @@ public class Group extends Basic implements Holder<Basic> {
 	 * @param object
 	 *            Object to add
 	 */
-	public void add(Basic object) {
+	public void add(T object) {
 		object.parent = this;
 		object.create();
 		children.add(object);
@@ -84,12 +84,12 @@ public class Group extends Basic implements Holder<Basic> {
 	 * @param object
 	 *            Object to remove
 	 */
-	public void remove(Basic object) {
+	public void remove(T object) {
 		children.remove(object);
 		object.destroy();
 	}
 
-	public ArrayList<Basic> getChildren() {
+	public ArrayList<T> getChildren() {
 		return children;
 	}
 

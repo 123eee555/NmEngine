@@ -1,5 +1,6 @@
 package me.nimnon.nmengine.state;
 
+import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.entity.Group;
 
 /**
@@ -17,20 +18,14 @@ public class State extends Group {
 	public State() {
 
 	}
-
+	
 	/**
-	 * Called on update
+	 * Clears children then switches to a plain State
 	 */
-	public void update() {
-		super.update();
-	}
-
-	/**
-	 * Called on state creation
-	 */
-
-	public void create() {
-
+	public void destroy() {
+		this.children.clear();
+		this.children = null;
+		Game.switchState(new State());
 	}
 
 }

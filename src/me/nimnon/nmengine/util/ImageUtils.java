@@ -95,9 +95,15 @@ public class ImageUtils {
 		return color;
 	}
 
-	public static BufferedImage getImage(String path) throws IOException {
+	public static BufferedImage getImage(String path) {
 		URL img = new Byte((byte) 0).getClass().getResource(path);
-		return ImageIO.read(img);
+		try {
+			return ImageIO.read(img);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**

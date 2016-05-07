@@ -277,8 +277,8 @@ public class Game {
 		window.setFocusable(true);
 		window.setResizable(false);
 		
-		
-		window.setIconImage(icon);
+		if(icon!=null)
+			window.setIconImage(icon);
 
 		thread.setPreferredSize(new Dimension(width, height));
 		Game.backgroundColor = backgroundColor;

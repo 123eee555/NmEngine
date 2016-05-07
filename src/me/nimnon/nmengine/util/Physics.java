@@ -143,12 +143,22 @@ public class Physics {
 				} else {
 					collide(o1, (Group) g1.getChildren().get(i));
 				}
+			} else if (g1.getChildren().get(i) instanceof TileMap) {
+				if (!returnValue) {
+					returnValue = collide(o1, (TileMap) g1.getChildren().get(i));
+				} else {
+					collide(o1, (TileMap) g1.getChildren().get(i));
+				}
 			}
 		}
 		return returnValue;
 	}
 
 	public static boolean collide(Group g1, GameObject o1) {
+		return collide(o1, g1);
+	}
+
+	public static boolean collide(Group g1, TileMap o1) {
 		return collide(o1, g1);
 	}
 
@@ -169,12 +179,18 @@ public class Physics {
 				} else {
 					collide((Group) g1.getChildren().get(i), g2);
 				}
+			} else if (g1.getChildren().get(i) instanceof TileMap) {
+				if (!returnValue) {
+					returnValue = collide((TileMap) g1.getChildren().get(i), g2);
+				} else {
+					collide((TileMap) g1.getChildren().get(i), g2);
+				}
 			}
 		}
 
 		return returnValue;
 	}
-	
+
 	public static boolean collide(GameObject o1, TileMap g1) {
 		boolean returnValue = false;
 
@@ -190,16 +206,16 @@ public class Physics {
 		}
 		return returnValue;
 	}
-	
-	public static boolean collide(Group g1, TileMap g2) {
+
+	public static boolean collide(TileMap g2, Group g1) {
 		boolean returnValue = false;
 		for (int i = 0; i < g1.getChildren().size(); i++) {
 			if (g1.getChildren().get(i) instanceof GameObject) {
 				if (!returnValue) {
-					returnValue = collide((GameObject)g1.getChildren().get(i), g2);
+					returnValue = collide((GameObject) g1.getChildren().get(i), g2);
 
 				} else {
-					collide((GameObject)g1.getChildren().get(i), g2);
+					collide((GameObject) g1.getChildren().get(i), g2);
 				}
 			}
 		}

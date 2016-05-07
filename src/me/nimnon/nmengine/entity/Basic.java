@@ -1,5 +1,7 @@
 package me.nimnon.nmengine.entity;
 
+import me.nimnon.nmengine.util.Holder;
+
 /**
  * Basic root class, all objects inherit this class
  * 
@@ -11,7 +13,7 @@ public abstract class Basic {
 	/**
 	 * Whatever group this basic is a member of, game states have no parent
 	 */
-	public Group parent;
+	public Holder<?> parent;
 	
 	/**
 	 * Called before update()
@@ -29,7 +31,7 @@ public abstract class Basic {
 	public abstract void postUpdate();
 	
 	/**
-	 * Called on creation
+	 * Called when the object is added to a State or Group
 	 */
 	public abstract void create();
 	/**
@@ -38,9 +40,13 @@ public abstract class Basic {
 	public abstract void draw();
 
 	/**
-	 * Destroys object, currently non-functional
+	 * Destroys object, removing it from existence, objects should be dereferenced after
+	 * calling destroy, as many parts of the object are dereferenced for the garbage collector.
+	 * If you simply want to hide an object, move it out of its group until I implement some
+	 * sort of kill method, lol.
 	 */
 	public void destroy() {
+		parent.getChildren().remove(this);
 		parent.getChildren().trimToSize();
 	}
 

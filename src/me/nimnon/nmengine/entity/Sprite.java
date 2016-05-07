@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import me.nimnon.nmengine.Game;
@@ -81,16 +80,10 @@ public class Sprite extends GameObject {
 	public void loadGraphic(String path) {
 		this.animated = false;
 
-		try {
-			this.graphic = ImageUtils.getImage(path);
-			this.drawClip = graphic;
-			this.width = graphic.getWidth();
-			this.height = graphic.getHeight();
-		} catch (IOException e) {
-			e.printStackTrace();
-			// Fall back to generated sprite..
-			makeGraphic(12, 12, color);
-		}
+		this.graphic = ImageUtils.getImage(path);
+		this.drawClip = graphic;
+		this.width = graphic.getWidth();
+		this.height = graphic.getHeight();
 
 	}
 
@@ -109,10 +102,6 @@ public class Sprite extends GameObject {
 
 		try {
 			this.graphic = ImageUtils.getImage(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-			// Fall back to generated sprite..
-			makeGraphic(12, 12, color);
 		} finally {
 			this.animated = animate;
 			this.width = spriteWidth;

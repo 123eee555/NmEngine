@@ -3,7 +3,6 @@ package me.nimnon.nmengine.entity.ui;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import me.nimnon.nmengine.Game;
 import me.nimnon.nmengine.core.Camera;
@@ -35,19 +34,11 @@ public class NineSlice extends UIBasic {
 	}
 
 	public void createNineSliceFromImage(String path) {
-		try {
-			BufferedImage source = ImageUtils.getImage(path);
-			sliceWidth = source.getWidth() / 3;
-			sliceHeight = source.getHeight() / 3;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		BufferedImage source = ImageUtils.getImage(path);
+		sliceWidth = source.getWidth() / 3;
+		sliceHeight = source.getHeight() / 3;
 		for (int i = 0; i < sliceArray.length; i++) {
-			try {
-				sliceArray[i] = ImageUtils.getSlice(i, ImageUtils.getImage(path), sliceWidth, sliceHeight);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			sliceArray[i] = ImageUtils.getSlice(i, ImageUtils.getImage(path), sliceWidth, sliceHeight);
 		}
 	}
 

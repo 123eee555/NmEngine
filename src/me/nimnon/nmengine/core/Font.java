@@ -3,7 +3,6 @@ package me.nimnon.nmengine.core;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import me.nimnon.nmengine.util.ImageUtils;
 
@@ -14,17 +13,13 @@ public class Font {
 	BufferedImage fontSrc;
 
 	public Font() {
-		try {
-			fontSrc = ImageUtils.getImage("/me/nimnon/nmengine/assets/fonts/BitmapFont.png");
-			BufferedImage tempImg = new BufferedImage(fontSrc.getWidth(), fontSrc.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-			Graphics2D g2d = tempImg.createGraphics();
-			g2d.drawImage(fontSrc, 0, 0, null);
-			g2d.dispose();
-			fontSrc = tempImg;
-			tempImg.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		fontSrc = ImageUtils.getImage("/me/nimnon/nmengine/assets/fonts/BitmapFont.png");
+		BufferedImage tempImg = new BufferedImage(fontSrc.getWidth(), fontSrc.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2d = tempImg.createGraphics();
+		g2d.drawImage(fontSrc, 0, 0, null);
+		g2d.dispose();
+		fontSrc = tempImg;
+		tempImg.flush();
 	}
 
 	public int getStringWidth(String string) {
